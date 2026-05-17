@@ -1,0 +1,263 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>喻旭 · 青峰侠 | 文章专栏</title>
+
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet" />
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script src="articles-data.js"></script>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            primary: '#14b8a6',
+            'primary-light': '#2dd4bf',
+            'primary-dark': '#0d9488',
+            'accent-gold': '#c9a84c',
+            'accent-cyan': '#06b6d4',
+            'surface': '#0f172a',
+            'surface-container': '#1e293b',
+            'surface-container-high': '#334155',
+            'on-surface': '#f8fafc',
+            'on-surface-variant': '#94a3b8',
+            'outline-variant': '#475569',
+          },
+          fontFamily: {
+            inter: ['Inter', 'system-ui', 'sans-serif'],
+          },
+          boxShadow: {
+            'float': '0 25px 50px -12px rgba(0, 0, 0, 0.4)',
+          },
+        },
+      },
+    }
+  </script>
+  <style type="text/tailwindcss">
+    @layer utilities {
+      .glass-card {
+        background: rgba(30, 41, 59, 0.6);
+        backdrop-filter: blur(12px);
+        border: 1px solid rgba(71, 85, 105, 0.3);
+      }
+      .glass-sidebar {
+        background: rgba(15, 23, 42, 0.85);
+        backdrop-filter: blur(12px);
+        border-right: 1px solid rgba(71, 85, 105, 0.2);
+      }
+      .gradient-text {
+        background: linear-gradient(135deg, #14b8a6 0%, #06b6d4 50%, #c9a84c 100%);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        background-clip: text;
+      }
+      .article-content h2 {
+        font-size: 1.25rem;
+        font-weight: 600;
+        color: #f8fafc;
+        margin-top: 1.5rem;
+        margin-bottom: 1rem;
+      }
+      .article-content p {
+        color: #94a3b8;
+        line-height: 1.8;
+        margin-bottom: 1rem;
+      }
+      .article-content ul {
+        list-style: disc;
+        padding-left: 1.5rem;
+        margin-bottom: 1rem;
+      }
+      .article-content li {
+        color: #94a3b8;
+        line-height: 1.8;
+        margin-bottom: 0.5rem;
+      }
+    }
+    html {
+      scroll-behavior: smooth;
+    }
+    body {
+      font-family: 'Inter', system-ui, sans-serif;
+      background: linear-gradient(135deg, #0f172a 0%, #1e293b 50%, #0f172a 100%);
+      min-height: 100vh;
+      color: #f8fafc;
+    }
+  </style>
+</head>
+
+<body>
+  <!-- 导航栏 -->
+  <header class="fixed top-0 left-0 right-0 z-50 px-4 md:px-6">
+    <div class="glass-card rounded-2xl mx-auto max-w-7xl mt-4 px-6 py-3 flex items-center justify-between">
+      <a href="index.html" class="flex items-center gap-3 group">
+        <div class="w-10 h-10 rounded-xl bg-gradient-to-br from-primary to-accent-cyan flex items-center justify-center group-hover:shadow-[0_0_20px_rgba(20,184,166,0.5)] transition-shadow">
+          <span class="text-white font-bold text-lg">Y</span>
+        </div>
+        <span class="font-bold text-lg">喻旭 · 青峰侠</span>
+      </a>
+      <nav class="hidden md:flex items-center gap-1">
+        <a href="index.html#about" class="px-3 py-1.5 text-sm font-medium text-on-surface-variant hover:text-on-surface hover:bg-surface-container/50 rounded-md transition-colors">关于我</a>
+        <a href="index.html#expertise" class="px-3 py-1.5 text-sm font-medium text-on-surface-variant hover:text-on-surface hover:bg-surface-container/50 rounded-md transition-colors">核心专长</a>
+        <a href="index.html#books" class="px-3 py-1.5 text-sm font-medium text-on-surface-variant hover:text-on-surface hover:bg-surface-container/50 rounded-md transition-colors">著作</a>
+        <a href="index.html#courses" class="px-3 py-1.5 text-sm font-medium text-on-surface-variant hover:text-on-surface hover:bg-surface-container/50 rounded-md transition-colors">课程体系</a>
+        <a href="articles.html" class="px-3 py-1.5 text-sm font-medium text-primary bg-primary/10 rounded-md">文章专栏</a>
+      </nav>
+      <button id="mobile-menu-btn" class="md:hidden w-10 h-10 rounded-lg flex items-center justify-center hover:bg-surface-container/50 transition-colors">
+        <i data-lucide="menu" class="w-5 h-5"></i>
+      </button>
+    </div>
+  </header>
+
+  <!-- 移动端菜单 -->
+  <div id="mobile-menu" class="fixed inset-0 z-40 bg-black/80 backdrop-blur-sm md:hidden hidden">
+    <div class="flex flex-col items-center justify-center h-full gap-6">
+      <a href="index.html#about" class="text-xl font-medium text-on-surface hover:text-primary transition-colors">关于我</a>
+      <a href="index.html#expertise" class="text-xl font-medium text-on-surface hover:text-primary transition-colors">核心专长</a>
+      <a href="index.html#books" class="text-xl font-medium text-on-surface hover:text-primary transition-colors">著作</a>
+      <a href="index.html#courses" class="text-xl font-medium text-on-surface hover:text-primary transition-colors">课程体系</a>
+      <a href="articles.html" class="text-xl font-medium text-primary">文章专栏</a>
+    </div>
+  </div>
+
+  <!-- 主要内容区域 -->
+  <main class="pt-28 pb-20">
+    <!-- 页面标题 -->
+    <section class="max-w-7xl mx-auto px-4 md:px-6 mb-16">
+      <div class="text-center">
+        <div class="inline-flex items-center gap-2 mb-4">
+          <div class="w-8 h-[2px] bg-primary"></div>
+          <span class="text-sm font-semibold text-primary tracking-wider">ARTICLES</span>
+        </div>
+        <h1 class="text-3xl md:text-4xl font-bold mb-4">
+          <span class="gradient-text">文章专栏</span>
+        </h1>
+        <p class="text-on-surface-variant max-w-2xl mx-auto">分享数字化转型、AI营销、新零售等领域的实战经验与思考</p>
+      </div>
+    </section>
+
+    <!-- 文章列表 -->
+    <section class="max-w-7xl mx-auto px-4 md:px-6">
+      <div id="article-grid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6"></div>
+
+      <!-- 分页 -->
+      <div class="flex justify-center items-center gap-2 mt-12">
+        <button id="article-prev" class="w-10 h-10 rounded-lg bg-surface-container/60 flex items-center justify-center hover:bg-primary/20 hover:text-primary transition-colors disabled:opacity-50 disabled:cursor-not-allowed" disabled>
+          <i data-lucide="chevron-left" class="w-5 h-5"></i>
+        </button>
+        <button id="article-page-1" class="w-10 h-10 rounded-lg bg-primary flex items-center justify-center text-white font-medium">1</button>
+        <button id="article-page-2" class="w-10 h-10 rounded-lg bg-surface-container/60 flex items-center justify-center hover:bg-primary/20 hover:text-primary transition-colors">2</button>
+        <button id="article-page-3" class="w-10 h-10 rounded-lg bg-surface-container/60 flex items-center justify-center hover:bg-primary/20 hover:text-primary transition-colors">3</button>
+        <button id="article-page-4" class="w-10 h-10 rounded-lg bg-surface-container/60 flex items-center justify-center hover:bg-primary/20 hover:text-primary transition-colors">4</button>
+        <button id="article-page-5" class="w-10 h-10 rounded-lg bg-surface-container/60 flex items-center justify-center hover:bg-primary/20 hover:text-primary transition-colors">5</button>
+        <button id="article-next" class="w-10 h-10 rounded-lg bg-surface-container/60 flex items-center justify-center hover:bg-primary/20 hover:text-primary transition-colors">
+          <i data-lucide="chevron-right" class="w-5 h-5"></i>
+        </button>
+      </div>
+    </section>
+  </main>
+
+  <!-- 页脚 -->
+  <footer class="border-t border-outline-variant/20 py-12">
+    <div class="max-w-7xl mx-auto px-4 md:px-6">
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+        <div>
+          <div class="flex items-center gap-3 mb-4">
+            <div class="w-10 h-10 rounded-xl bg-gradient-to-br from-primary to-accent-cyan flex items-center justify-center">
+              <span class="text-white font-bold text-lg">Y</span>
+            </div>
+            <span class="font-bold text-lg">喻旭 · 青峰侠</span>
+          </div>
+          <p class="text-sm text-on-surface-variant">资深数智化商业顾问，专注企业数字化转型与AI赋能</p>
+        </div>
+        <div>
+          <h4 class="font-semibold mb-4">快速链接</h4>
+          <ul class="space-y-2">
+            <li><a href="index.html#about" class="text-sm text-on-surface-variant hover:text-primary transition-colors">关于我</a></li>
+            <li><a href="index.html#expertise" class="text-sm text-on-surface-variant hover:text-primary transition-colors">核心专长</a></li>
+            <li><a href="index.html#books" class="text-sm text-on-surface-variant hover:text-primary transition-colors">著作</a></li>
+            <li><a href="index.html#courses" class="text-sm text-on-surface-variant hover:text-primary transition-colors">课程体系</a></li>
+            <li><a href="articles.html" class="text-sm text-on-surface-variant hover:text-primary transition-colors">文章专栏</a></li>
+          </ul>
+        </div>
+        <div>
+          <h4 class="font-semibold mb-4">联系我</h4>
+          <div class="flex items-center gap-3 mb-4">
+            <div class="w-10 h-10 rounded-lg bg-primary/10 flex items-center justify-center">
+              <i data-lucide="phone" class="w-5 h-5 text-primary"></i>
+            </div>
+            <span class="text-sm text-on-surface-variant">商务合作咨询</span>
+          </div>
+          <div class="flex gap-3">
+            <a href="#" class="w-10 h-10 rounded-lg bg-surface-container/60 flex items-center justify-center hover:bg-primary/20 hover:text-primary transition-colors">
+              <i data-lucide="wechat" class="w-5 h-5"></i>
+            </a>
+            <a href="#" class="w-10 h-10 rounded-lg bg-surface-container/60 flex items-center justify-center hover:bg-primary/20 hover:text-primary transition-colors">
+              <i data-lucide="linkedin" class="w-5 h-5"></i>
+            </a>
+            <a href="#" class="w-10 h-10 rounded-lg bg-surface-container/60 flex items-center justify-center hover:bg-primary/20 hover:text-primary transition-colors">
+              <i data-lucide="twitter" class="w-5 h-5"></i>
+            </a>
+          </div>
+        </div>
+      </div>
+      <div class="border-t border-outline-variant/20 mt-8 pt-8 text-center text-sm text-on-surface-variant">
+        <p>&copy; 2024 喻旭 · 青峰侠. All rights reserved.</p>
+      </div>
+    </div>
+  </footer>
+
+  <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.js"></script>
+  <script>
+    lucide.createIcons();
+
+    // 移动端菜单
+    const mobileMenuBtn = document.getElementById('mobile-menu-btn');
+    const mobileMenu = document.getElementById('mobile-menu');
+    
+    mobileMenuBtn.addEventListener('click', () => {
+      mobileMenu.classList.toggle('hidden');
+    });
+
+    mobileMenu.addEventListener('click', (e) => {
+      if (e.target.tagName === 'A') {
+        mobileMenu.classList.add('hidden');
+      }
+    });
+
+    // 动态渲染文章列表
+    function renderPage(page) {
+      var totalPages = Math.ceil(latestArticles.length / 6);
+      renderArticleCards(latestArticles, 'article-grid', page, 6);
+      updatePagination(totalPages, page, 'article-prev', 'article-next', 'article-page-');
+    }
+
+    // 分页按钮事件绑定
+    document.getElementById('article-prev').addEventListener('click', function() {
+      var activePage = parseInt(document.getElementById('article-grid').getAttribute('data-current') || '1');
+      if (activePage > 1) renderPage(activePage - 1);
+    });
+
+    document.getElementById('article-next').addEventListener('click', function() {
+      var activePage = parseInt(document.getElementById('article-grid').getAttribute('data-current') || '1');
+      var totalPages = Math.ceil(latestArticles.length / 6);
+      if (activePage < totalPages) renderPage(activePage + 1);
+    });
+
+    for (var i = 1; i <= 5; i++) {
+      (function(pageNum) {
+        document.getElementById('article-page-' + pageNum).addEventListener('click', function() {
+          renderPage(pageNum);
+        });
+      })(i);
+    }
+
+    // 初始化加载第一页
+    renderPage(1);
+  </script>
+</body>
+
+</html>

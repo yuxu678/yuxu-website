@@ -1,0 +1,386 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>喻旭 · 青峰侠 | 文章详情</title>
+
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet" />
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            primary: '#14b8a6',
+            'primary-light': '#2dd4bf',
+            'primary-dark': '#0d9488',
+            'accent-gold': '#c9a84c',
+            'accent-cyan': '#06b6d4',
+            'surface': '#0f172a',
+            'surface-container': '#1e293b',
+            'surface-container-high': '#334155',
+            'on-surface': '#f8fafc',
+            'on-surface-variant': '#94a3b8',
+            'outline-variant': '#475569',
+          },
+          fontFamily: {
+            inter: ['Inter', 'system-ui', 'sans-serif'],
+          },
+          boxShadow: {
+            'float': '0 25px 50px -12px rgba(0, 0, 0, 0.4)',
+          },
+        },
+      },
+    }
+  </script>
+  <style type="text/tailwindcss">
+    @layer utilities {
+      .glass-card {
+        background: rgba(30, 41, 59, 0.6);
+        backdrop-filter: blur(12px);
+        border: 1px solid rgba(71, 85, 105, 0.3);
+      }
+      .gradient-text {
+        background: linear-gradient(135deg, #14b8a6 0%, #06b6d4 50%, #c9a84c 100%);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        background-clip: text;
+      }
+    }
+    html {
+      scroll-behavior: smooth;
+    }
+    body {
+      font-family: 'Inter', system-ui, sans-serif;
+      background: linear-gradient(135deg, #0f172a 0%, #1e293b 50%, #0f172a 100%);
+      min-height: 100vh;
+      color: #f8fafc;
+    }
+    .article-content h2 {
+      font-size: 1.25rem;
+      font-weight: 600;
+      color: #f8fafc;
+      margin-top: 1.5rem;
+      margin-bottom: 1rem;
+    }
+    .article-content p {
+      color: #94a3b8;
+      line-height: 1.8;
+      margin-bottom: 1rem;
+    }
+    .article-content ul {
+      list-style: disc;
+      padding-left: 1.5rem;
+      margin-bottom: 1rem;
+    }
+    .article-content li {
+      color: #94a3b8;
+      line-height: 1.8;
+      margin-bottom: 0.5rem;
+    }
+    .article-content blockquote {
+      border-left: 4px solid #14b8a6;
+      padding-left: 1rem;
+      margin: 1.5rem 0;
+      color: #94a3b8;
+      font-style: italic;
+    }
+  </style>
+  <script src="articles-data.js"></script>
+  <script src="articles-content.js"></script>
+  <style>
+    .article-content h3 {
+      font-size: 1.15rem;
+      font-weight: 600;
+      color: #f8fafc;
+      margin-top: 1.25rem;
+      margin-bottom: 0.75rem;
+    }
+    .article-content strong {
+      color: #e2e8f0;
+    }
+    .article-content ol {
+      list-style: decimal;
+      padding-left: 1.5rem;
+      margin-bottom: 1rem;
+    }
+    .article-content ol li {
+      color: #94a3b8;
+      line-height: 1.8;
+      margin-bottom: 0.5rem;
+    }
+    .article-content img {
+      max-width: 100%;
+      border-radius: 0.5rem;
+    }
+    .article-content a {
+      color: #14b8a6;
+    }
+  </style>
+</head>
+
+<body>
+  <!-- 导航栏 -->
+  <header class="fixed top-0 left-0 right-0 z-50 px-4 md:px-6">
+    <div class="glass-card rounded-2xl mx-auto max-w-7xl mt-4 px-6 py-3 flex items-center justify-between">
+      <a href="index.html" class="flex items-center gap-3 group">
+        <div class="w-10 h-10 rounded-xl bg-gradient-to-br from-primary to-accent-cyan flex items-center justify-center group-hover:shadow-[0_0_20px_rgba(20,184,166,0.5)] transition-shadow">
+          <span class="text-white font-bold text-lg">Y</span>
+        </div>
+        <span class="font-bold text-lg">喻旭 · 青峰侠</span>
+      </a>
+      <nav class="hidden md:flex items-center gap-1">
+        <a href="index.html#about" class="px-3 py-1.5 text-sm font-medium text-on-surface-variant hover:text-on-surface hover:bg-surface-container/50 rounded-md transition-colors">关于我</a>
+        <a href="index.html#expertise" class="px-3 py-1.5 text-sm font-medium text-on-surface-variant hover:text-on-surface hover:bg-surface-container/50 rounded-md transition-colors">核心专长</a>
+        <a href="index.html#books" class="px-3 py-1.5 text-sm font-medium text-on-surface-variant hover:text-on-surface hover:bg-surface-container/50 rounded-md transition-colors">著作</a>
+        <a href="index.html#courses" class="px-3 py-1.5 text-sm font-medium text-on-surface-variant hover:text-on-surface hover:bg-surface-container/50 rounded-md transition-colors">课程体系</a>
+        <a href="articles.html" class="px-3 py-1.5 text-sm font-medium text-primary bg-primary/10 rounded-md">文章专栏</a>
+      </nav>
+      <button id="mobile-menu-btn" class="md:hidden w-10 h-10 rounded-lg flex items-center justify-center hover:bg-surface-container/50 transition-colors">
+        <i data-lucide="menu" class="w-5 h-5"></i>
+      </button>
+    </div>
+  </header>
+
+  <!-- 移动端菜单 -->
+  <div id="mobile-menu" class="fixed inset-0 z-40 bg-black/80 backdrop-blur-sm md:hidden hidden">
+    <div class="flex flex-col items-center justify-center h-full gap-6">
+      <div class="flex items-center justify-between w-full px-6">
+        <a href="index.html" class="flex items-center gap-3">
+          <div class="w-10 h-10 rounded-xl bg-gradient-to-br from-primary to-accent-cyan flex items-center justify-center">
+            <span class="text-white font-bold text-lg">Y</span>
+          </div>
+          <span class="font-bold text-lg">喻旭 · 青峰侠</span>
+        </a>
+        <button id="mobile-menu-close" class="w-10 h-10 rounded-lg flex items-center justify-center hover:bg-surface-container/50 transition-colors">
+          <i data-lucide="x" class="w-6 h-6"></i>
+        </button>
+      </div>
+      <a href="index.html#about" class="text-xl font-medium text-on-surface hover:text-primary transition-colors">关于我</a>
+      <a href="index.html#expertise" class="text-xl font-medium text-on-surface hover:text-primary transition-colors">核心专长</a>
+      <a href="index.html#books" class="text-xl font-medium text-on-surface hover:text-primary transition-colors">著作</a>
+      <a href="index.html#courses" class="text-xl font-medium text-on-surface hover:text-primary transition-colors">课程体系</a>
+      <a href="articles.html" class="text-xl font-medium text-primary">文章专栏</a>
+    </div>
+  </div>
+
+  <!-- 主要内容区域 -->
+  <main class="pt-28 pb-20">
+    <!-- 文章头部 -->
+    <section class="max-w-4xl mx-auto px-4 md:px-6 mb-8">
+      <div class="flex items-center gap-2 mb-4">
+        <a href="articles.html" class="flex items-center gap-1 text-sm text-on-surface-variant hover:text-primary transition-colors">
+          <i data-lucide="arrow-left" class="w-4 h-4"></i>
+          返回文章列表
+        </a>
+        <span class="text-on-surface-variant/50">/</span>
+        <span id="article-breadcrumb-tag" class="text-sm text-on-surface-variant">AI营销</span>
+      </div>
+      
+      <h1 id="article-title" class="text-3xl md:text-4xl font-bold mb-6"></h1>
+      
+      <div class="flex items-center gap-6 mb-8">
+        <div class="flex items-center gap-3">
+          <div class="w-10 h-10 rounded-full bg-gradient-to-br from-primary to-accent-cyan flex items-center justify-center">
+            <span class="text-white font-bold text-sm">Y</span>
+          </div>
+          <div>
+            <div class="font-medium">喻旭 · 青峰侠</div>
+            <div class="text-xs text-on-surface-variant">资深数智化商业顾问</div>
+          </div>
+        </div>
+        <div class="flex items-center gap-4 text-sm text-on-surface-variant">
+          <span id="article-date" class="flex items-center gap-1">
+            <i data-lucide="calendar" class="w-4 h-4"></i>
+            <span id="article-date-text"></span>
+          </span>
+          <span class="flex items-center gap-1">
+            <i data-lucide="eye" class="w-4 h-4"></i>
+            2,356 阅读
+          </span>
+        </div>
+      </div>
+
+      <!-- 文章封面 -->
+      <div class="relative h-64 md:h-80 rounded-2xl overflow-hidden mb-8">
+        <div class="absolute inset-0 bg-gradient-to-br from-primary/20 via-accent-cyan/10 to-accent-gold/10"></div>
+        <div class="absolute inset-0 flex items-center justify-center">
+          <i id="article-cover-icon" data-lucide="lightbulb" class="w-24 h-24 text-primary/30"></i>
+        </div>
+      </div>
+    </section>
+
+    <!-- 文章内容 -->
+    <section class="max-w-4xl mx-auto px-4 md:px-6">
+    <div id="article-content-header"></div>
+    <article id="article-content-body" class="article-content glass-card rounded-2xl p-8">
+    </article>
+    
+    <div class="flex flex-wrap gap-2 mt-8" id="article-tags"></div>
+    
+    <div class="flex items-center gap-3 mt-8">
+    <span class="text-sm text-on-surface-variant">分享：</span>
+    <a href="javascript:void(0)" onclick="copyArticleUrl()" class="w-10 h-10 rounded-lg bg-surface-container/60 flex items-center justify-center hover:bg-primary/20 hover:text-primary transition-colors">
+    <i data-lucide="link" class="w-5 h-5"></i>
+    </a>
+    </div>
+    </section>
+  </main>
+
+  <!-- 页脚 -->
+  <footer class="border-t border-outline-variant/20 py-12">
+    <div class="max-w-7xl mx-auto px-4 md:px-6">
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+        <div>
+          <div class="flex items-center gap-3 mb-4">
+            <div class="w-10 h-10 rounded-xl bg-gradient-to-br from-primary to-accent-cyan flex items-center justify-center">
+              <span class="text-white font-bold text-lg">Y</span>
+            </div>
+            <span class="font-bold text-lg">喻旭 · 青峰侠</span>
+          </div>
+          <p class="text-sm text-on-surface-variant">资深数智化商业顾问，专注企业数字化转型与AI赋能</p>
+        </div>
+        <div>
+          <h4 class="font-semibold mb-4">快速链接</h4>
+          <ul class="space-y-2">
+            <li><a href="index.html#about" class="text-sm text-on-surface-variant hover:text-primary transition-colors">关于我</a></li>
+            <li><a href="index.html#expertise" class="text-sm text-on-surface-variant hover:text-primary transition-colors">核心专长</a></li>
+            <li><a href="index.html#books" class="text-sm text-on-surface-variant hover:text-primary transition-colors">著作</a></li>
+            <li><a href="index.html#courses" class="text-sm text-on-surface-variant hover:text-primary transition-colors">课程体系</a></li>
+            <li><a href="articles.html" class="text-sm text-on-surface-variant hover:text-primary transition-colors">文章专栏</a></li>
+          </ul>
+        </div>
+        <div>
+          <h4 class="font-semibold mb-4">联系我</h4>
+          <div class="flex items-center gap-3 mb-4">
+            <div class="w-10 h-10 rounded-lg bg-primary/10 flex items-center justify-center">
+              <i data-lucide="phone" class="w-5 h-5 text-primary"></i>
+            </div>
+            <span class="text-sm text-on-surface-variant">商务合作咨询</span>
+          </div>
+          <div class="flex gap-3">
+            <a href="#" class="w-10 h-10 rounded-lg bg-surface-container/60 flex items-center justify-center hover:bg-primary/20 hover:text-primary transition-colors">
+              <i data-lucide="wechat" class="w-5 h-5"></i>
+            </a>
+            <a href="#" class="w-10 h-10 rounded-lg bg-surface-container/60 flex items-center justify-center hover:bg-primary/20 hover:text-primary transition-colors">
+              <i data-lucide="linkedin" class="w-5 h-5"></i>
+            </a>
+            <a href="#" class="w-10 h-10 rounded-lg bg-surface-container/60 flex items-center justify-center hover:bg-primary/20 hover:text-primary transition-colors">
+              <i data-lucide="twitter" class="w-5 h-5"></i>
+            </a>
+          </div>
+        </div>
+      </div>
+      <div class="border-t border-outline-variant/20 mt-8 pt-8 text-center text-sm text-on-surface-variant">
+        <p>&copy; 2024 喻旭 · 青峰侠. All rights reserved.</p>
+      </div>
+    </div>
+  </footer>
+
+  <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.js"></script>
+  <script>
+    if (typeof lucide !== 'undefined') {
+      try { lucide.createIcons(); } catch(e) {}
+    }
+
+    // 移动端菜单
+    const mobileMenuBtn = document.getElementById('mobile-menu-btn');
+    const mobileMenu = document.getElementById('mobile-menu');
+    
+    if (mobileMenuBtn) {
+      mobileMenuBtn.addEventListener('click', () => {
+        mobileMenu.classList.toggle('hidden');
+      });
+    }
+
+    if (mobileMenu) {
+      mobileMenu.addEventListener('click', (e) => {
+        if (e.target.tagName === 'A') {
+          mobileMenu.classList.add('hidden');
+        }
+      });
+    }
+  </script>
+  <script>
+    function cleanArticleContent(content) {
+      if (!content) return '';
+      return content
+        .replace(/\\"/g, '"')
+        .replace(/\\n/g, '\n');
+    }
+
+    function loadArticle() {
+      var urlParams = new URLSearchParams(window.location.search);
+      var articleId = urlParams.get('id');
+
+      if (!articleId) {
+        console.warn('[Article] No article ID in URL');
+        return;
+      }
+
+      if (typeof articlesContent === 'undefined') {
+        console.error('[Article] articlesContent not loaded');
+        document.getElementById('article-content-body').textContent = '文章内容加载失败，请稍后再试';
+        return;
+      }
+
+      var article = articlesContent.find(function(a) { return a.id === articleId; });
+      if (!article) {
+        console.error('[Article] Article not found:', articleId);
+        document.getElementById('article-content-body').textContent = '未找到该文章（ID: ' + articleId + '）';
+        return;
+      }
+
+      document.title = article.title + ' - 喻旭 · 青峰侠';
+
+      var titleEl = document.getElementById('article-title');
+      if (titleEl) titleEl.textContent = article.title;
+
+      var dateTextEl = document.getElementById('article-date-text');
+      if (dateTextEl) dateTextEl.textContent = article.date;
+
+      var contentBody = document.getElementById('article-content-body');
+      if (contentBody) {
+        var cleanedContent = cleanArticleContent(article.content);
+        contentBody.innerHTML = cleanedContent;
+        console.log('[Article] Content loaded, length:', cleanedContent.length);
+      }
+
+      if (typeof getArticleTag === 'function') {
+        var tagInfo = getArticleTag(article.title);
+        if (tagInfo) {
+          var tagsContainer = document.getElementById('article-tags');
+          if (tagsContainer) {
+            var tagSpan = document.createElement('span');
+            tagSpan.className = 'px-3 py-1 rounded-full text-xs font-medium bg-' + tagInfo.color + '/10 text-' + tagInfo.color;
+            tagSpan.textContent = tagInfo.name;
+            tagsContainer.appendChild(tagSpan);
+          }
+
+          var breadcrumbTag = document.getElementById('article-breadcrumb-tag');
+          if (breadcrumbTag) breadcrumbTag.textContent = tagInfo.name;
+        }
+      }
+
+      if (typeof lucide !== 'undefined') {
+        try { lucide.createIcons(); } catch(e) {}
+      }
+    }
+
+    loadArticle();
+
+    function copyArticleUrl() {
+      var input = document.createElement('input');
+      input.value = window.location.href;
+      document.body.appendChild(input);
+      input.select();
+      document.execCommand('copy');
+      document.body.removeChild(input);
+      alert('链接已复制到剪贴板');
+    }
+  </script>
+</body>
+
+</html>

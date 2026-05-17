@@ -1,0 +1,2094 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>喻旭 · 青峰侠 | 资深数智化商业顾问</title>
+
+  <link href="https://lf-code-agent.coze.cn/obj/x-ai-cn/fonts/google/google-all-fonts.css" rel="stylesheet"/>
+
+  <script src="https://lf-code-agent.coze.cn/obj/x-ai-cn/cdn/jquery/jquery-3.7.1.min.js"></script>
+  <script src="https://lf-code-agent.coze.cn/obj/x-ai-cn/cdn/lucide/lucide-1.11.0.min.js"></script>
+  <script src="https://lf-code-agent.coze.cn/obj/x-ai-cn/cdn/tailwindcss/tailwindcss-browser-4.2.4.min.js"></script>
+  <script src="articles-data.js"></script>
+
+  <style type="text/tailwindcss">
+    @theme {
+      /* === 品牌色（青峰侠主题：青绿+金） === */
+      --color-primary:              #14B8A6;
+      --color-primary-container:    #0D9488;
+      --color-on-primary:           #ffffff;
+      --color-accent-gold:          #C9A84C;
+      --color-accent-cyan:          #06B6D4;
+      /* === 背景 / 表面 === */
+      --color-background:                 #050816;
+      --color-surface-container-lowest:   #0A0F1E;
+      --color-surface:                    #0F172A;
+      --color-surface-container:          #1E293B;
+      --color-surface-container-high:     #273549;
+      --color-surface-container-highest:  #334155;
+      /* === 文字 === */
+      --color-on-surface:           #F1F5F9;
+      --color-on-surface-variant:   #94A3B8;
+      /* === 功能色 === */
+      --color-success:  #22c55e;
+      --color-error:    #ef4444;
+      --color-warning:  #f59e0b;
+      /* === 边框 === */
+      --color-outline:          #334155;
+      --color-outline-variant:  #1E293B;
+      /* === 圆角 === */
+      --radius-sm:   0.375rem;
+      --radius-md:   0.5rem;
+      --radius-lg:   0.75rem;
+      --radius-xl:   1rem;
+      --radius-2xl:  1.5rem;
+      --radius-full: 9999px;
+      /* === 阴影 === */
+      --shadow-card:   0 2px 12px rgba(0,0,0,0.4);
+      --shadow-float:  0 10px 30px rgba(0,0,0,0.5);
+      --shadow-dialog: 0 25px 50px rgba(0,0,0,0.6);
+      /* === 字体 === */
+      --font-sans: "Space Grotesk", "Noto Sans SC", system-ui, sans-serif;
+    }
+    /* 照片墙 */
+    .photo-wall-item {
+      position: relative;
+      transition: transform 0.3s ease, box-shadow 0.3s ease;
+    }
+    .photo-wall-item:hover {
+      transform: scale(1.05);
+      z-index: 10;
+      box-shadow: 0 8px 30px rgba(20, 184, 166, 0.3);
+    }
+    .photo-wall-item img {
+      transition: transform 0.5s ease;
+    }
+    /* 全屏查看器 */
+    #photoViewer.active {
+      display: flex;
+    }
+    #photoViewer img {
+      animation: viewerFadeIn 0.3s ease;
+    }
+    @keyframes viewerFadeIn {
+      from { opacity: 0; transform: scale(0.9); }
+      to { opacity: 1; transform: scale(1); }
+    }
+  </style>
+
+  <style>
+    /* === 全局滚动条 === */
+    ::-webkit-scrollbar { width: 6px; }
+    ::-webkit-scrollbar-track { background: var(--color-background); }
+    ::-webkit-scrollbar-thumb { background: var(--color-surface-container-high); border-radius: 3px; }
+    html { scroll-behavior: smooth; }
+
+    /* === Hero 背景动画 === */
+    @keyframes heroGlow {
+      0%, 100% { opacity: 0.4; transform: translate(-50%, -50%) scale(1); }
+      50% { opacity: 0.7; transform: translate(-50%, -50%) scale(1.1); }
+    }
+    @keyframes floatLight {
+      0% { transform: translate(0, 0) scale(1); opacity: 0; }
+      10% { opacity: 1; }
+      50% { transform: translate(calc(100vw * 0.8), calc(100vh * 0.6)) scale(1.5); opacity: 0.8; }
+      90% { opacity: 0.3; }
+      100% { transform: translate(calc(100vw * 1.2), calc(100vh * 0.8)) scale(0.5); opacity: 0; }
+    }
+    @keyframes float {
+      0%, 100% { transform: translateY(0px); }
+      50% { transform: translateY(-12px); }
+    }
+    @keyframes slideUp {
+      from { opacity: 0; transform: translateY(40px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+    @keyframes fadeIn {
+      from { opacity: 0; }
+      to { opacity: 1; }
+    }
+    @keyframes marquee {
+      0% { transform: translateX(0); }
+      100% { transform: translateX(-50%); }
+    }
+    @keyframes pulse-glow {
+      0%, 100% { box-shadow: 0 0 15px rgba(20,184,166,0.3); }
+      50% { box-shadow: 0 0 30px rgba(20,184,166,0.6); }
+    }
+    @keyframes countUp {
+      from { opacity: 0; transform: translateY(10px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    .animate-slide-up {
+      animation: slideUp 0.8s ease-out forwards;
+      opacity: 0;
+    }
+    .animate-fade-in {
+      animation: fadeIn 1s ease-out forwards;
+      opacity: 0;
+    }
+    .animate-float { animation: float 6s ease-in-out infinite; }
+
+    /* === 滚动触发动画 === */
+    .reveal {
+      opacity: 0;
+      transform: translateY(30px);
+      transition: all 0.8s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+    .reveal.visible {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    /* === Logo滚动墙 === */
+    .marquee-track {
+      display: flex;
+      gap: 3rem;
+      animation: marquee 30s linear infinite;
+    }
+    .marquee-track:hover { animation-play-state: paused; }
+
+    /* === 课程大纲展开 === */
+    .course-outline {
+      max-height: 0;
+      overflow: hidden;
+      transition: max-height 0.5s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+    .course-outline.expanded {
+      max-height: 2000px;
+    }
+
+    /* === 视频容器 === */
+    .video-container {
+      position: relative;
+      border-radius: 1rem;
+      overflow: hidden;
+      box-shadow: 0 0 40px rgba(20,184,166,0.15), 0 20px 60px rgba(0,0,0,0.5);
+    }
+    .video-container::before {
+      content: '';
+      position: absolute;
+      inset: -2px;
+      border-radius: 1.1rem;
+      background: linear-gradient(135deg, rgba(20,184,166,0.5), transparent, rgba(201,168,76,0.3));
+      z-index: -1;
+    }
+
+    /* === 毛玻璃卡片 === */
+    .glass-card {
+      background: rgba(15, 23, 42, 0.6);
+      backdrop-filter: blur(20px);
+      border: 1px solid rgba(148, 163, 184, 0.08);
+    }
+
+    /* === 侧边悬浮CTA === */
+    .floating-cta {
+      position: fixed;
+      right: 1.5rem;
+      top: 50%;
+      transform: translateY(-50%);
+      z-index: 40;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.4s ease;
+    }
+    .floating-cta.show {
+      opacity: 1;
+      pointer-events: auto;
+    }
+
+    /* === QR弹窗 === */
+    .qr-popup {
+      position: absolute;
+      top: 100%;
+      right: 0;
+      margin-top: 0.5rem;
+      opacity: 0;
+      pointer-events: none;
+      transform: translateY(-8px);
+      transition: all 0.3s ease;
+    }
+    .qr-popup.show {
+      opacity: 1;
+      pointer-events: auto;
+      transform: translateY(0);
+    }
+
+    /* === 金色文字 === */
+    .text-gold { color: var(--color-accent-gold); }
+    .bg-gold { background-color: var(--color-accent-gold); }
+
+    /* === 渐变文字 === */
+    .gradient-text {
+      background: linear-gradient(135deg, #14B8A6, #06B6D4, #C9A84C);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+
+    /* === section分隔 === */
+    .section-divider {
+      height: 1px;
+      background: linear-gradient(to right, transparent, rgba(20,184,166,0.2), transparent);
+    }
+
+    /* 客户卡片hover浮层 */
+    .client-card {
+      position: relative;
+    }
+    .client-card .client-tooltip {
+      position: absolute;
+      top: calc(100% + 8px);
+      left: 50%;
+      transform: translateX(-50%) translateY(-6px);
+      opacity: 0;
+      pointer-events: none;
+      transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+      z-index: 999;
+      min-width: 200px;
+      max-width: 280px;
+      padding: 12px 16px;
+      border-radius: 12px;
+      backdrop-filter: blur(16px);
+      -webkit-backdrop-filter: blur(16px);
+      background: rgba(15, 23, 42, 0.95);
+      border: 1px solid rgba(20, 184, 166, 0.3);
+      box-shadow: 0 8px 32px rgba(0, 0, 0, 0.5), 0 0 20px rgba(20, 184, 166, 0.15);
+    }
+    .client-card .client-tooltip::before {
+      content: '';
+      position: absolute;
+      bottom: 100%;
+      left: 50%;
+      transform: translateX(-50%);
+      border: 6px solid transparent;
+      border-bottom-color: rgba(15, 23, 42, 0.95);
+    }
+    .client-card .client-tooltip::after {
+      content: '';
+      position: absolute;
+      bottom: calc(100% - 1px);
+      left: 50%;
+      transform: translateX(-50%);
+      border: 6px solid transparent;
+      border-bottom-color: rgba(20, 184, 166, 0.3);
+    }
+    .client-card:hover .client-tooltip {
+      opacity: 1;
+      transform: translateX(-50%) translateY(0);
+      pointer-events: auto;
+    }
+    .client-card:hover {
+      border-color: rgba(20, 184, 166, 0.3) !important;
+      box-shadow: 0 0 20px rgba(20, 184, 166, 0.15);
+      transform: translateY(-2px);
+    }
+    .client-tooltip .service-tag {
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+      font-size: 11px;
+      font-weight: 600;
+      padding: 2px 8px;
+      border-radius: 4px;
+      margin-bottom: 6px;
+    }
+    .client-tooltip .service-tag.lecture {
+      background: rgba(20, 184, 166, 0.15);
+      color: #14B8A6;
+    }
+    .client-tooltip .service-tag.consulting {
+      background: rgba(201, 168, 76, 0.15);
+      color: #C9A84C;
+    }
+    .client-tooltip .service-tag.project {
+      background: rgba(6, 182, 212, 0.15);
+      color: #06B6D4;
+    }
+    .client-tooltip .service-tag .tag-dot {
+      width: 6px;
+      height: 6px;
+      border-radius: 50%;
+    }
+    .client-tooltip .service-tag.lecture .tag-dot { background: #14B8A6; }
+    .client-tooltip .service-tag.consulting .tag-dot { background: #C9A84C; }
+    .client-tooltip .service-tag.project .tag-dot { background: #06B6D4; }
+    .client-tooltip .service-desc {
+      font-size: 12px;
+      color: rgba(203, 213, 225, 0.8);
+      line-height: 1.5;
+    }
+  </style>
+
+  <!-- 图片兜底 -->
+  <script>
+    document.addEventListener('error', function (e) {
+      const img = e.target;
+      if (img.tagName !== 'IMG' || img.dataset.fallback) return;
+      img.dataset.fallback = '1';
+      const esc = s => s.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+      const cat = img.getAttribute('data-category') || '其他';
+      const alt = img.getAttribute('alt') || '';
+      const label = esc(alt.length > 8 ? alt.slice(0, 8) + '…' : alt);
+      const icons = { '人物': '👤', '自然风景': '🏞', '动物': '🐾', '建筑城市': '🏙', '运动体育': '⚽', '交通工具': '🚗', '食物': '🍽', '服饰时尚': '👗', '商业科技': '💼', '游戏娱乐': '🎮', '艺术': '🎨', '其他': '🖼' };
+      const icon = icons[cat] || '🖼';
+      const w = img.width || 400, h = img.height || 300;
+      const svg = `<svg xmlns="http://www.w3.org/2000/svg" width="${w}" height="${h}"><rect width="100%" height="100%" fill="%231e293b"/><text x="50%" y="45%" text-anchor="middle" font-size="${Math.min(w, h) * 0.18}" dominant-baseline="central">${icon}</text><text x="50%" y="68%" text-anchor="middle" font-size="${Math.min(w, h) * 0.07}" fill="%2394a3b8" font-family="system-ui,sans-serif" dominant-baseline="central">${label}</text></svg>`;
+      img.src = 'data:image/svg+xml,' + svg;
+    }, true);
+  </script>
+</head>
+
+<body class="bg-background text-on-surface font-sans overflow-x-hidden">
+
+  <!-- ============================================ -->
+  <!--  ① 导航栏 (固定顶部 + 电话 + 二维码)         -->
+  <!-- ============================================ -->
+  <!-- @nav:start -->
+  <header class="fixed top-0 left-0 right-0 z-50 bg-background/70 backdrop-blur-xl border-b border-outline-variant/30">
+    <div class="max-w-7xl mx-auto px-4 md:px-6 h-16 flex items-center justify-between">
+      <!-- Logo -->
+      <div class="flex items-center gap-2.5">
+        <div class="w-9 h-9 rounded-lg bg-gradient-to-br from-primary to-accent-cyan flex items-center justify-center shadow-[0_0_15px_rgba(20,184,166,0.4)]">
+          <i data-lucide="zap" class="w-4.5 h-4.5 text-white"></i>
+        </div>
+        <div class="flex flex-col leading-none">
+          <span class="font-bold text-base tracking-tight">喻旭</span>
+          <span class="text-[10px] text-on-surface-variant tracking-widest">QINGFENGXIA</span>
+        </div>
+      </div>
+
+      <!-- 导航链接 -->
+      <nav class="hidden lg:flex items-center gap-1">
+        <a href="#about" class="px-3 py-1.5 text-sm font-medium text-on-surface-variant hover:text-on-surface hover:bg-surface-container/50 rounded-md transition-colors">关于我</a>
+        <a href="#expertise" class="px-3 py-1.5 text-sm font-medium text-on-surface-variant hover:text-on-surface hover:bg-surface-container/50 rounded-md transition-colors">核心专长</a>
+        <a href="#books" class="px-3 py-1.5 text-sm font-medium text-on-surface-variant hover:text-on-surface hover:bg-surface-container/50 rounded-md transition-colors">著作</a>
+        <a href="#clients" class="px-3 py-1.5 text-sm font-medium text-on-surface-variant hover:text-on-surface hover:bg-surface-container/50 rounded-md transition-colors">客户</a>
+        <a href="#courses" class="px-3 py-1.5 text-sm font-medium text-on-surface-variant hover:text-on-surface hover:bg-surface-container/50 rounded-md transition-colors">课程体系</a>
+        <a href="#gallery" class="px-3 py-1.5 text-sm font-medium text-on-surface-variant hover:text-on-surface hover:bg-surface-container/50 rounded-md transition-colors">授课风采</a>
+        <a href="#articles" class="px-3 py-1.5 text-sm font-medium text-on-surface-variant hover:text-on-surface hover:bg-surface-container/50 rounded-md transition-colors">文章专栏</a>
+      </nav>
+
+      <!-- 右侧：电话 + 二维码 + CTA -->
+      <div class="flex items-center gap-3">
+        <!-- 电话号码 -->
+        <a href="tel:18902408809" class="hidden md:flex items-center gap-1.5 text-sm font-semibold text-accent-gold hover:text-primary transition-colors">
+          <i data-lucide="phone" class="w-4 h-4"></i>
+          <span>189-0240-8809</span>
+        </a>
+        <!-- 二维码按钮 -->
+        <div class="relative">
+          <button id="qr-toggle" class="w-9 h-9 rounded-lg bg-surface-container/60 flex items-center justify-center hover:bg-surface-container-high transition-colors">
+            <i data-lucide="qr-code" class="w-4 h-4 text-on-surface-variant"></i>
+          </button>
+          <!-- 二维码弹窗 -->
+          <div id="qr-popup" class="qr-popup glass-card rounded-xl p-4 w-52">
+            <div class="w-40 h-40 bg-white rounded-lg mx-auto flex items-center justify-center mb-2 overflow-hidden">
+              <img src="assets/qrcode.jpg" alt="微信二维码" class="w-full h-full object-cover">
+            </div>
+            <p class="text-xs text-on-surface-variant text-center mt-2">扫码添加微信 · 喻旭·青峰侠</p>
+          </div>
+        </div>
+        <!-- CTA按钮 -->
+        <a href="#contact" class="hidden sm:flex items-center gap-1.5 bg-primary text-on-primary px-4 py-2 rounded-lg text-sm font-semibold hover:opacity-90 transition-opacity shadow-[0_0_20px_rgba(20,184,166,0.3)]">
+          <i data-lucide="calendar-check" class="w-4 h-4"></i>
+          预约咨询
+        </a>
+      </div>
+    </div>
+  </header>
+  <!-- @nav:end -->
+
+  <!-- ============================================ -->
+  <!--  侧边悬浮CTA                                 -->
+  <!-- ============================================ -->
+  <div id="floating-cta" class="floating-cta">
+    <div class="flex flex-col gap-2">
+      <a href="tel:18902408809" class="w-11 h-11 rounded-xl glass-card flex items-center justify-center hover:bg-primary/20 transition-colors group" title="拨打电话">
+        <i data-lucide="phone" class="w-5 h-5 text-primary group-hover:scale-110 transition-transform"></i>
+      </a>
+      <button id="float-qr-btn" class="w-11 h-11 rounded-xl glass-card flex items-center justify-center hover:bg-primary/20 transition-colors group" title="微信二维码">
+        <i data-lucide="scan-line" class="w-5 h-5 text-accent-gold group-hover:scale-110 transition-transform"></i>
+      </button>
+      <a href="#contact" class="w-11 h-11 rounded-xl glass-card flex items-center justify-center hover:bg-primary/20 transition-colors group" title="联系我">
+        <i data-lucide="message-circle" class="w-5 h-5 text-accent-cyan group-hover:scale-110 transition-transform"></i>
+      </a>
+    </div>
+  </div>
+
+  <!-- 侧边二维码弹窗 -->
+  <div id="float-qr-popup" class="fixed right-20 top-1/2 -translate-y-1/2 z-50 glass-card rounded-xl p-4 w-52 opacity-0 pointer-events-none transition-all duration-300" style="transform: translateY(-50%) translateX(8px);">
+    <div class="w-40 h-40 bg-white rounded-lg mx-auto flex items-center justify-center mb-2 overflow-hidden">
+      <img src="assets/qrcode.jpg" alt="微信二维码" class="w-full h-full object-cover">
+    </div>
+    <p class="text-xs text-on-surface-variant text-center mt-2">扫码添加微信 · 喻旭·青峰侠</p>
+  </div>
+
+  <!-- @main-content:start -->
+  <main>
+
+    <!-- ============================================ -->
+    <!--  ② HERO 区 — 全屏震撼登场                     -->
+    <!-- ============================================ -->
+    <section class="relative min-h-screen flex items-center pt-16 overflow-hidden">
+      <!-- 背景光效 -->
+      <div class="absolute inset-0 pointer-events-none">
+        <div class="absolute top-1/2 left-1/4 w-[600px] h-[600px] rounded-full bg-primary/8 blur-[120px]" style="animation: heroGlow 8s ease-in-out infinite;"></div>
+        <div class="absolute top-1/3 right-1/4 w-[400px] h-[400px] rounded-full bg-accent-gold/6 blur-[100px]" style="animation: heroGlow 10s ease-in-out infinite 2s;"></div>
+        <div class="absolute bottom-1/4 left-1/2 w-[300px] h-[300px] rounded-full bg-accent-cyan/5 blur-[80px]" style="animation: heroGlow 12s ease-in-out infinite 4s;"></div>
+        <div class="absolute top-1/4 left-1/3 w-[200px] h-[200px] rounded-full bg-primary/10 blur-[60px]" style="animation: heroGlow 6s ease-in-out infinite 1s;"></div>
+        <div class="absolute bottom-1/3 right-1/3 w-[250px] h-[250px] rounded-full bg-accent-cyan/8 blur-[70px]" style="animation: heroGlow 7s ease-in-out infinite 3s;"></div>
+      </div>
+      <!-- 流动光效 -->
+      <div class="absolute inset-0 pointer-events-none overflow-hidden">
+        <div class="absolute w-2 h-2 rounded-full bg-primary/40" style="animation: floatLight 15s ease-in-out infinite;"></div>
+        <div class="absolute w-1.5 h-1.5 rounded-full bg-accent-cyan/50" style="animation: floatLight 12s ease-in-out infinite 2s;"></div>
+        <div class="absolute w-2 h-2 rounded-full bg-accent-gold/30" style="animation: floatLight 18s ease-in-out infinite 5s;"></div>
+      </div>
+
+      <div class="relative max-w-7xl mx-auto px-4 md:px-6 w-full">
+        <div class="flex flex-col lg:flex-row items-center gap-12 lg:gap-16">
+          <!-- 左侧：青峰侠形象 -->
+          <div class="relative animate-slide-up flex-shrink-0" style="animation-delay: 0.2s;">
+            <div class="relative w-72 md:w-80 lg:w-96">
+              <!-- 光圈装饰 -->
+              <div class="absolute -inset-4 rounded-full bg-gradient-to-br from-primary/20 via-transparent to-accent-gold/10 blur-2xl animate-float"></div>
+              <div class="absolute -inset-1 rounded-2xl bg-gradient-to-br from-primary/30 via-transparent to-accent-gold/20 blur-lg"></div>
+              <!-- 人物图片 -->
+              <img src="assets/hero-avatar.png" alt="喻旭·青峰侠，资深数智化商业顾问" data-category="人物"
+                   class="relative w-full drop-shadow-2xl" />
+              <!-- 底部标签 -->
+              <div class="absolute -bottom-4 left-1/2 -translate-x-1/2 glass-card rounded-full px-5 py-1.5 flex items-center gap-2">
+                <div class="w-2 h-2 rounded-full bg-primary animate-pulse"></div>
+                <span class="text-xs font-medium text-primary">可预约</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- 右侧：文字信息 -->
+          <div class="flex-1 text-center lg:text-left">
+            <div class="animate-slide-up" style="animation-delay: 0.4s;">
+              <div class="inline-flex items-center gap-2 glass-card rounded-full px-4 py-1.5 mb-6">
+                <i data-lucide="award" class="w-4 h-4 text-accent-gold"></i>
+                <span class="text-xs font-medium text-accent-gold">20年数智化实战 · 畅销书作者</span>
+              </div>
+            </div>
+
+            <h1 class="animate-slide-up text-4xl md:text-5xl lg:text-6xl font-bold leading-tight mb-4" style="animation-delay: 0.5s;">
+              <span class="gradient-text">喻旭</span>
+              <span class="text-on-surface-variant font-light text-2xl md:text-3xl lg:text-4xl ml-2">· 青峰侠</span>
+            </h1>
+
+            <p class="animate-slide-up text-lg md:text-xl text-on-surface-variant mb-6 leading-relaxed" style="animation-delay: 0.6s;">
+              资深数智化商业顾问<br class="hidden md:block" />
+              <span class="text-primary">清华/北大/武大/中大</span> 总裁班讲师
+            </p>
+
+            <p class="animate-slide-up text-sm text-on-surface-variant/80 mb-8 max-w-lg mx-auto lg:mx-0" style="animation-delay: 0.7s;">
+              20年数字化实战经验，服务400+企业培训、30+企业咨询落地。<br/>
+              《企业数字化转型》《新零售落地画布》畅销书作者。<br/>
+              北京大兴机场、南方航空等500强数字化商业主笔人。
+            </p>
+
+            <!-- 核心数据 -->
+            <div class="animate-slide-up flex flex-wrap justify-center lg:justify-start gap-6 md:gap-10 mb-8" style="animation-delay: 0.8s;">
+              <div class="text-center lg:text-left">
+                <div class="text-3xl md:text-4xl font-bold gradient-text counter" data-target="23">0</div>
+                <div class="text-xs text-on-surface-variant mt-1">年从业经验</div>
+              </div>
+              <div class="text-center lg:text-left">
+                <div class="text-3xl md:text-4xl font-bold gradient-text counter" data-target="400">0</div>
+                <div class="text-xs text-on-surface-variant mt-1">+企业培训服务</div>
+              </div>
+              <div class="text-center lg:text-left">
+                <div class="text-3xl md:text-4xl font-bold gradient-text counter" data-target="30">0</div>
+                <div class="text-xs text-on-surface-variant mt-1">+咨询项目落地</div>
+              </div>
+              <div class="text-center lg:text-left">
+                <div class="text-3xl md:text-4xl font-bold gradient-text counter" data-target="6">0</div>
+                <div class="text-xs text-on-surface-variant mt-1">大名校总裁班</div>
+              </div>
+            </div>
+
+            <!-- CTA -->
+            <div class="animate-slide-up flex flex-wrap justify-center lg:justify-start gap-3" style="animation-delay: 1s;">
+              <a href="#contact" class="inline-flex items-center gap-2 bg-primary text-on-primary px-6 py-3 rounded-xl text-sm font-semibold hover:opacity-90 transition-all shadow-[0_0_25px_rgba(20,184,166,0.35)]">
+                <i data-lucide="handshake" class="w-4 h-4"></i>
+                邀约合作
+              </a>
+              <a href="#courses" class="inline-flex items-center gap-2 glass-card px-6 py-3 rounded-xl text-sm font-semibold text-on-surface hover:bg-surface-container/50 transition-all">
+                <i data-lucide="play-circle" class="w-4 h-4 text-primary"></i>
+                查看课程
+              </a>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <div class="section-divider max-w-4xl mx-auto"></div>
+
+    <!-- ============================================ -->
+    <!--  ③ 关于我 — 视频 + 履历                       -->
+    <!-- ============================================ -->
+    <section id="about" class="py-20 md:py-28 relative">
+      <div class="max-w-7xl mx-auto px-4 md:px-6">
+        <div class="reveal flex flex-col lg:flex-row items-stretch gap-12 lg:gap-16">
+          <!-- 左侧：形象照片 -->
+          <div class="w-full lg:w-auto flex-shrink-0 flex flex-col">
+            <div class="relative w-full max-w-xs mx-auto lg:mx-0 group flex-1 flex flex-col justify-center">
+              <div class="absolute -inset-1 rounded-2xl bg-gradient-to-br from-primary/30 via-accent-cyan/20 to-accent-gold/10 blur-xl opacity-60 group-hover:opacity-100 group-hover:scale-105 transition-all duration-500"></div>
+              <div class="relative rounded-xl overflow-hidden shadow-float group-hover:shadow-[0_0_40px_rgba(20,184,166,0.3)] transition-all duration-500">
+                <img src="assets/喻旭形象照（抠过图小图）.png" alt="喻旭·青峰侠" class="w-full h-full object-contain bg-surface-container/50 group-hover:scale-102 transition-transform duration-700">
+              </div>
+              <div class="absolute -bottom-2 -right-2 w-8 h-8 rounded-full bg-gradient-to-br from-primary to-accent-cyan flex items-center justify-center shadow-[0_0_20px_rgba(20,184,166,0.5)] animate-pulse">
+                <i data-lucide="sparkles" class="w-4 h-4 text-white"></i>
+              </div>
+            </div>
+          </div>
+
+          <!-- 右侧：文字履历 -->
+          <div class="flex-1">
+            <div class="inline-flex items-center gap-2 mb-4">
+              <div class="w-8 h-[2px] bg-primary"></div>
+              <span class="text-sm font-semibold text-primary tracking-wider">ABOUT ME</span>
+            </div>
+
+            <h2 class="text-3xl md:text-4xl font-bold mb-6">
+              数智化浪潮中的<span class="gradient-text">领航者</span>
+            </h2>
+
+            <p class="text-on-surface-variant leading-relaxed mb-8">
+              喻旭老师是资深数智化商业顾问，拥有20年数字化实战经验。他是《企业数字化转型》《新零售落地画布》等畅销书作者，曾担任易观咨询合伙人、易观咨询华南区总经理、创业黑马特邀讲师，参与阿里云、京东云及北京大兴机场、南方航空等重大数字化项目。作为清华大学、北京大学、武汉大学、中山大学等名校总裁班讲师，喻旭老师在企业数字化转型、新零售、数字化营销及AI赋能经营增长等领域有深入研究和丰富实战。
+            </p>
+
+            <p class="text-on-surface-variant leading-relaxed mb-10">
+              喻旭老师授课经验丰富，服务客户覆盖金融、通信、零售、制造等行业，包括苹果、茅台、中国银行、万科、顺丰等。课程体系涵盖数字化商业战略、数字化营销、AI赋能企业经营等，注重实战落地，深受企业好评。
+            </p>
+
+            <!-- 核心身份标签 -->
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+              <div class="glass-card rounded-xl px-4 py-3 flex items-center gap-3">
+                <div class="w-10 h-10 rounded-lg bg-primary/10 flex items-center justify-center flex-shrink-0">
+                  <i data-lucide="book-open" class="w-5 h-5 text-primary"></i>
+                </div>
+                <div>
+                  <div class="text-sm font-semibold">畅销书作者</div>
+                  <div class="text-xs text-on-surface-variant">《企业数字化转型》《新零售落地画布》</div>
+                </div>
+              </div>
+              <div class="glass-card rounded-xl px-4 py-3 flex items-center gap-3">
+                <div class="w-10 h-10 rounded-lg bg-accent-gold/10 flex items-center justify-center flex-shrink-0">
+                  <i data-lucide="graduation-cap" class="w-5 h-5 text-accent-gold"></i>
+                </div>
+                <div>
+                  <div class="text-sm font-semibold">名校总裁班讲师</div>
+                  <div class="text-xs text-on-surface-variant">清华/北大/武大/中大/浙大/中科大</div>
+                </div>
+              </div>
+              <div class="glass-card rounded-xl px-4 py-3 flex items-center gap-3">
+                <div class="w-10 h-10 rounded-lg bg-accent-cyan/10 flex items-center justify-center flex-shrink-0">
+                  <i data-lucide="building" class="w-5 h-5 text-accent-cyan"></i>
+                </div>
+                <div>
+                  <div class="text-sm font-semibold">500强项目主笔人</div>
+                  <div class="text-xs text-on-surface-variant">大兴机场/南方航空/阿里云/京东云</div>
+                </div>
+              </div>
+              <div class="glass-card rounded-xl px-4 py-3 flex items-center gap-3">
+                <div class="w-10 h-10 rounded-lg bg-primary/10 flex items-center justify-center flex-shrink-0">
+                  <i data-lucide="users" class="w-5 h-5 text-primary"></i>
+                </div>
+                <div>
+                  <div class="text-sm font-semibold">原易观咨询合伙人</div>
+                  <div class="text-xs text-on-surface-variant">华南区总经理 · 创业黑马特邀讲师</div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <div class="section-divider max-w-4xl mx-auto"></div>
+
+    <!-- ============================================ -->
+    <!--  ④ 核心专长 — 四大领域                        -->
+    <!-- ============================================ -->
+    <section id="expertise" class="py-20 md:py-28 relative">
+      <div class="absolute inset-0 pointer-events-none">
+        <div class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[800px] h-[400px] rounded-full bg-primary/3 blur-[150px]"></div>
+      </div>
+      <div class="relative max-w-7xl mx-auto px-4 md:px-6">
+        <div class="reveal text-center mb-14">
+          <div class="inline-flex items-center gap-2 mb-4">
+            <div class="w-8 h-[2px] bg-primary"></div>
+            <span class="text-sm font-semibold text-primary tracking-wider">EXPERTISE</span>
+            <div class="w-8 h-[2px] bg-primary"></div>
+          </div>
+          <h2 class="text-3xl md:text-4xl font-bold">四大核心<span class="gradient-text">专长领域</span></h2>
+          <p class="text-on-surface-variant mt-3 max-w-2xl mx-auto">20年深耕企业数智化，从战略规划到落地执行，全链路赋能企业增长</p>
+        </div>
+
+        <div class="reveal grid grid-cols-1 md:grid-cols-2 gap-5">
+          <!-- 专长1 -->
+          <div class="glass-card rounded-2xl p-6 hover:border-primary/30 hover:bg-primary/5 hover:shadow-[0_0_30px_rgba(20,184,166,0.15)] transition-all duration-500 group hover:-translate-y-1">
+            <div class="flex items-start gap-4">
+              <div class="w-14 h-14 rounded-2xl bg-gradient-to-br from-primary/20 to-primary/5 flex items-center justify-center flex-shrink-0 group-hover:shadow-[0_0_25px_rgba(20,184,166,0.3)] group-hover:scale-110 transition-all duration-300">
+                <i data-lucide="cpu" class="w-7 h-7 text-primary group-hover:text-white transition-colors duration-300"></i>
+              </div>
+              <div>
+                <h3 class="text-lg font-bold mb-2 group-hover:text-primary transition-colors duration-300">企业数字化转型</h3>
+                <p class="text-sm text-on-surface-variant leading-relaxed mb-3">从顶层规划到落地执行，帮助企业构建数字化战略蓝图，打通业务与技术的认知壁垒。</p>
+                <div class="flex flex-wrap gap-1.5">
+                  <span class="text-[10px] px-2 py-0.5 rounded-full bg-primary/10 text-primary font-medium group-hover:bg-primary/20 transition-colors duration-300">战略规划</span>
+                  <span class="text-[10px] px-2 py-0.5 rounded-full bg-primary/10 text-primary font-medium group-hover:bg-primary/20 transition-colors duration-300">落地执行</span>
+                  <span class="text-[10px] px-2 py-0.5 rounded-full bg-primary/10 text-primary font-medium group-hover:bg-primary/20 transition-colors duration-300">变革管理</span>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- 专长2 -->
+          <div class="glass-card rounded-2xl p-6 hover:border-accent-gold/30 hover:bg-accent-gold/5 hover:shadow-[0_0_30px_rgba(201,168,76,0.15)] transition-all duration-500 group hover:-translate-y-1">
+            <div class="flex items-start gap-4">
+              <div class="w-14 h-14 rounded-2xl bg-gradient-to-br from-accent-gold/20 to-accent-gold/5 flex items-center justify-center flex-shrink-0 group-hover:shadow-[0_0_25px_rgba(201,168,76,0.3)] group-hover:scale-110 transition-all duration-300">
+                <i data-lucide="store" class="w-7 h-7 text-accent-gold group-hover:text-white transition-colors duration-300"></i>
+              </div>
+              <div>
+                <h3 class="text-lg font-bold mb-2 group-hover:text-accent-gold transition-colors duration-300">新零售实战</h3>
+                <p class="text-sm text-on-surface-variant leading-relaxed mb-3">从全渠道布局到私域运营，帮助企业构建以消费者为中心的新零售体系。</p>
+                <div class="flex flex-wrap gap-1.5">
+                  <span class="text-[10px] px-2 py-0.5 rounded-full bg-accent-gold/10 text-accent-gold font-medium group-hover:bg-accent-gold/20 transition-colors duration-300">全渠道融合</span>
+                  <span class="text-[10px] px-2 py-0.5 rounded-full bg-accent-gold/10 text-accent-gold font-medium group-hover:bg-accent-gold/20 transition-colors duration-300">私域运营</span>
+                  <span class="text-[10px] px-2 py-0.5 rounded-full bg-accent-gold/10 text-accent-gold font-medium group-hover:bg-accent-gold/20 transition-colors duration-300">场景设计</span>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- 专长3 -->
+          <div class="glass-card rounded-2xl p-6 hover:border-accent-cyan/30 hover:bg-accent-cyan/5 hover:shadow-[0_0_30px_rgba(6,182,212,0.15)] transition-all duration-500 group hover:-translate-y-1">
+            <div class="flex items-start gap-4">
+              <div class="w-14 h-14 rounded-2xl bg-gradient-to-br from-accent-cyan/20 to-accent-cyan/5 flex items-center justify-center flex-shrink-0 group-hover:shadow-[0_0_25px_rgba(6,182,212,0.3)] group-hover:scale-110 transition-all duration-300">
+                <i data-lucide="megaphone" class="w-7 h-7 text-accent-cyan group-hover:text-white transition-colors duration-300"></i>
+              </div>
+              <div>
+                <h3 class="text-lg font-bold mb-2 group-hover:text-accent-cyan transition-colors duration-300">数字化营销</h3>
+                <p class="text-sm text-on-surface-variant leading-relaxed mb-3">独创6步增收系统，从用户洞察到成交转化，用数据驱动营销增长。</p>
+                <div class="flex flex-wrap gap-1.5">
+                  <span class="text-[10px] px-2 py-0.5 rounded-full bg-accent-cyan/10 text-accent-cyan font-medium group-hover:bg-accent-cyan/20 transition-colors duration-300">6步增收</span>
+                  <span class="text-[10px] px-2 py-0.5 rounded-full bg-accent-cyan/10 text-accent-cyan font-medium group-hover:bg-accent-cyan/20 transition-colors duration-300">DTC转型</span>
+                  <span class="text-[10px] px-2 py-0.5 rounded-full bg-accent-cyan/10 text-accent-cyan font-medium group-hover:bg-accent-cyan/20 transition-colors duration-300">数据驱动</span>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- 专长4 -->
+          <div class="glass-card rounded-2xl p-6 hover:border-primary/30 hover:bg-primary/5 hover:shadow-[0_0_30px_rgba(20,184,166,0.15)] transition-all duration-500 group hover:-translate-y-1">
+            <div class="flex items-start gap-4">
+              <div class="w-14 h-14 rounded-2xl bg-gradient-to-br from-primary/20 to-accent-cyan/5 flex items-center justify-center flex-shrink-0 group-hover:shadow-[0_0_25px_rgba(20,184,166,0.3)] group-hover:scale-110 transition-all duration-300">
+                <i data-lucide="sparkles" class="w-7 h-7 text-primary group-hover:text-white transition-colors duration-300"></i>
+              </div>
+              <div>
+                <h3 class="text-lg font-bold mb-2 group-hover:text-primary transition-colors duration-300">AI赋能经营增长</h3>
+                <p class="text-sm text-on-surface-variant leading-relaxed mb-3">从AI认知普及到智能体搭建，让企业真正从"知道AI"到"用好AI"。</p>
+                <div class="flex flex-wrap gap-1.5">
+                  <span class="text-[10px] px-2 py-0.5 rounded-full bg-primary/10 text-primary font-medium">AI智能体</span>
+                  <span class="text-[10px] px-2 py-0.5 rounded-full bg-primary/10 text-primary font-medium">工作坊</span>
+                  <span class="text-[10px] px-2 py-0.5 rounded-full bg-primary/10 text-primary font-medium">人效提升</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <div class="section-divider max-w-4xl mx-auto"></div>
+
+    <!-- ============================================ -->
+    <!--  ⑤ 畅销著作                                   -->
+    <!-- ============================================ -->
+    <section id="books" class="py-20 md:py-28">
+      <div class="max-w-7xl mx-auto px-4 md:px-6">
+        <div class="reveal text-center mb-14">
+          <div class="inline-flex items-center gap-2 mb-4">
+            <div class="w-8 h-[2px] bg-accent-gold"></div>
+            <span class="text-sm font-semibold text-accent-gold tracking-wider">PUBLICATIONS</span>
+            <div class="w-8 h-[2px] bg-accent-gold"></div>
+          </div>
+          <h2 class="text-3xl md:text-4xl font-bold">畅销<span class="text-gold">著作</span></h2>
+        </div>
+
+        <div class="reveal grid grid-cols-1 md:grid-cols-3 gap-8 max-w-4xl mx-auto">
+          <!-- 书1 -->
+          <div class="glass-card rounded-2xl p-6 text-center group hover:border-accent-gold/30 hover:bg-accent-gold/5 hover:shadow-[0_0_30px_rgba(201,168,76,0.15)] transition-all duration-500 hover:-translate-y-2">
+            <div class="relative w-40 h-56 mx-auto mb-5 rounded-lg bg-gradient-to-br from-surface-container-high to-surface-container shadow-float flex items-center justify-center overflow-hidden group-hover:shadow-[0_0_35px_rgba(201,168,76,0.25)] transition-all duration-500">
+              <img src="assets/book2.png" alt="企业数字化转型" class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700">
+              <div class="absolute inset-0 bg-gradient-to-t from-black/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
+            </div>
+            <h3 class="font-bold text-base mb-1 group-hover:text-accent-gold transition-colors duration-300">《企业数字化转型》</h3>
+            <p class="text-xs text-on-surface-variant">系统化数字化转型方法论与落地实践指南</p>
+          </div>
+
+          <!-- 书2 -->
+          <div class="glass-card rounded-2xl p-6 text-center group hover:border-accent-gold/30 hover:bg-accent-gold/5 hover:shadow-[0_0_30px_rgba(201,168,76,0.15)] transition-all duration-500 hover:-translate-y-2">
+            <div class="relative w-40 h-56 mx-auto mb-5 rounded-lg bg-gradient-to-br from-surface-container-high to-surface-container shadow-float flex items-center justify-center overflow-hidden group-hover:shadow-[0_0_35px_rgba(201,168,76,0.25)] transition-all duration-500">
+              <img src="assets/book3.png" alt="新零售落地画布" class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700">
+              <div class="absolute inset-0 bg-gradient-to-t from-black/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
+            </div>
+            <h3 class="font-bold text-base mb-1 group-hover:text-accent-gold transition-colors duration-300">《新零售落地画布》</h3>
+            <p class="text-xs text-on-surface-variant">新零售从认知到实践的全景落地方法论</p>
+          </div>
+
+          <!-- 书3 -->
+          <div class="glass-card rounded-2xl p-6 text-center group hover:border-accent-gold/30 hover:bg-accent-gold/5 hover:shadow-[0_0_30px_rgba(201,168,76,0.15)] transition-all duration-500 hover:-translate-y-2">
+            <div class="relative w-40 h-56 mx-auto mb-5 rounded-lg bg-gradient-to-br from-surface-container-high to-surface-container shadow-float flex items-center justify-center overflow-hidden group-hover:shadow-[0_0_35px_rgba(201,168,76,0.25)] transition-all duration-500">
+              <img src="assets/book1.png" alt="互联网+企业行动指南" class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700">
+              <div class="absolute inset-0 bg-gradient-to-t from-black/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
+            </div>
+            <h3 class="font-bold text-base mb-1 group-hover:text-accent-gold transition-colors duration-300">《互联网+企业行动指南》</h3>
+            <p class="text-xs text-on-surface-variant">企业互联网转型的实战操作手册</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <div class="section-divider max-w-4xl mx-auto"></div>
+
+    <!-- ============================================ -->
+    <!--  ⑥ 客户墙 — 社会证明                          -->
+    <!-- ============================================ -->
+    <section id="clients" class="py-20 md:py-28 relative overflow-visible">
+      <div class="max-w-7xl mx-auto px-4 md:px-6">
+        <div class="reveal text-center mb-14">
+          <div class="inline-flex items-center gap-2 mb-4">
+            <div class="w-8 h-[2px] bg-primary"></div>
+            <span class="text-sm font-semibold text-primary tracking-wider">CLIENTS</span>
+            <div class="w-8 h-[2px] bg-primary"></div>
+          </div>
+          <h2 class="text-3xl md:text-4xl font-bold">服务<span class="gradient-text">客户</span></h2>
+          <p class="text-on-surface-variant mt-3">覆盖金融、通信、零售、制造、科技等10+行业，服务400+企业</p>
+        </div>
+
+        <!-- 服务类型图例 -->
+        <div class="reveal flex items-center justify-center gap-6 mb-8">
+          <div class="flex items-center gap-1.5"><span class="inline-block w-2.5 h-2.5 rounded-full bg-primary"></span><span class="text-xs text-on-surface-variant">讲课培训</span></div>
+          <div class="flex items-center gap-1.5"><span class="inline-block w-2.5 h-2.5 rounded-full bg-accent-gold"></span><span class="text-xs text-on-surface-variant">咨询项目</span></div>
+          <div class="flex items-center gap-1.5"><span class="inline-block w-2.5 h-2.5 rounded-full bg-accent-cyan"></span><span class="text-xs text-on-surface-variant">项目合作</span></div>
+        </div>
+
+        <!-- 分行业展示 -->
+        <div class="reveal space-y-8">
+          <!-- 金融 -->
+          <div>
+            <div class="flex items-center gap-2 mb-3">
+              <i data-lucide="landmark" class="w-4 h-4 text-accent-gold"></i>
+              <span class="text-sm font-semibold text-accent-gold">金融</span>
+            </div>
+            <div class="flex flex-wrap gap-3">
+              <div class="client-card glass-card rounded-lg px-5 py-2.5 text-sm font-medium text-on-surface-variant hover:text-on-surface transition-all cursor-default" data-service="讲课培训" data-type="lecture" data-desc="数字化转型战略总裁班授课">中国银行</div>
+              <div class="client-card glass-card rounded-lg px-5 py-2.5 text-sm font-medium text-on-surface-variant hover:text-on-surface transition-all cursor-default" data-service="讲课培训" data-type="lecture" data-desc="数字化营销实战培训">招商银行</div>
+              <div class="client-card glass-card rounded-lg px-5 py-2.5 text-sm font-medium text-on-surface-variant hover:text-on-surface transition-all cursor-default" data-service="咨询项目" data-type="consulting" data-desc="数字化转型规划咨询">平安银行</div>
+              <div class="client-card glass-card rounded-lg px-5 py-2.5 text-sm font-medium text-on-surface-variant hover:text-on-surface transition-all cursor-default" data-service="讲课培训" data-type="lecture" data-desc="AI赋能金融业务增长培训">建设银行</div>
+              <div class="client-card glass-card rounded-lg px-5 py-2.5 text-sm font-medium text-on-surface-variant hover:text-on-surface transition-all cursor-default" data-service="讲课培训" data-type="lecture" data-desc="数字化领导力高管培训">交通银行</div>
+              <div class="client-card glass-card rounded-lg px-5 py-2.5 text-sm font-medium text-on-surface-variant hover:text-on-surface transition-all cursor-default" data-service="咨询项目" data-type="consulting" data-desc="数字支付战略规划咨询">银联</div>
+              <div class="client-card glass-card rounded-lg px-5 py-2.5 text-sm font-medium text-on-surface-variant hover:text-on-surface transition-all cursor-default" data-service="讲课培训" data-type="lecture" data-desc="金融科技与数字化转型授课">深交所</div>
+            </div>
+          </div>
+          <!-- 消费/零售 -->
+          <div>
+            <div class="flex items-center gap-2 mb-3">
+              <i data-lucide="shopping-bag" class="w-4 h-4 text-primary"></i>
+              <span class="text-sm font-semibold text-primary">消费/零售</span>
+            </div>
+            <div class="flex flex-wrap gap-3">
+              <div class="client-card glass-card rounded-lg px-5 py-2.5 text-sm font-medium text-on-surface-variant hover:text-on-surface transition-all cursor-default" data-service="项目合作" data-type="project" data-desc="数字化零售渠道战略合作">苹果</div>
+              <div class="client-card glass-card rounded-lg px-5 py-2.5 text-sm font-medium text-on-surface-variant hover:text-on-surface transition-all cursor-default" data-service="讲课培训" data-type="lecture" data-desc="新零售战略与数字化转型授课">茅台集团</div>
+              <div class="client-card glass-card rounded-lg px-5 py-2.5 text-sm font-medium text-on-surface-variant hover:text-on-surface transition-all cursor-default" data-service="咨询项目" data-type="consulting" data-desc="数字化营销体系规划咨询">可口可乐</div>
+              <div class="client-card glass-card rounded-lg px-5 py-2.5 text-sm font-medium text-on-surface-variant hover:text-on-surface transition-all cursor-default" data-service="讲课培训" data-type="lecture" data-desc="高端品牌数字化营销培训">凯迪拉克</div>
+              <div class="client-card glass-card rounded-lg px-5 py-2.5 text-sm font-medium text-on-surface-variant hover:text-on-surface transition-all cursor-default" data-service="咨询项目" data-type="consulting" data-desc="大健康产业数字化战略咨询">广药集团</div>
+              <div class="client-card glass-card rounded-lg px-5 py-2.5 text-sm font-medium text-on-surface-variant hover:text-on-surface transition-all cursor-default" data-service="讲课培训" data-type="lecture" data-desc="新零售运营与门店数字化培训">全家</div>
+              <div class="client-card glass-card rounded-lg px-5 py-2.5 text-sm font-medium text-on-surface-variant hover:text-on-surface transition-all cursor-default" data-service="咨询项目" data-type="consulting" data-desc="全渠道零售数字化转型咨询">苏宁易购</div>
+              <div class="client-card glass-card rounded-lg px-5 py-2.5 text-sm font-medium text-on-surface-variant hover:text-on-surface transition-all cursor-default" data-service="讲课培训" data-type="lecture" data-desc="快消行业数字营销实战培训">立白</div>
+            </div>
+          </div>
+          <!-- 科技/互联网 -->
+          <div>
+            <div class="flex items-center gap-2 mb-3">
+              <i data-lucide="monitor" class="w-4 h-4 text-accent-cyan"></i>
+              <span class="text-sm font-semibold text-accent-cyan">科技/互联网</span>
+            </div>
+            <div class="flex flex-wrap gap-3">
+              <div class="client-card glass-card rounded-lg px-5 py-2.5 text-sm font-medium text-on-surface-variant hover:text-on-surface transition-all cursor-default" data-service="项目合作" data-type="project" data-desc="企业数字化转型生态战略合作">阿里云</div>
+              <div class="client-card glass-card rounded-lg px-5 py-2.5 text-sm font-medium text-on-surface-variant hover:text-on-surface transition-all cursor-default" data-service="项目合作" data-type="project" data-desc="智慧零售解决方案联合开发">京东云</div>
+              <div class="client-card glass-card rounded-lg px-5 py-2.5 text-sm font-medium text-on-surface-variant hover:text-on-surface transition-all cursor-default" data-service="讲课培训" data-type="lecture" data-desc="私域运营与数字化营销培训">微盟</div>
+              <div class="client-card glass-card rounded-lg px-5 py-2.5 text-sm font-medium text-on-surface-variant hover:text-on-surface transition-all cursor-default" data-service="讲课培训" data-type="lecture" data-desc="企业数字化转型高管培训">金蝶</div>
+              <div class="client-card glass-card rounded-lg px-5 py-2.5 text-sm font-medium text-on-surface-variant hover:text-on-surface transition-all cursor-default" data-service="讲课培训" data-type="lecture" data-desc="数字化企业战略授课">用友</div>
+              <div class="client-card glass-card rounded-lg px-5 py-2.5 text-sm font-medium text-on-surface-variant hover:text-on-surface transition-all cursor-default" data-service="咨询项目" data-type="consulting" data-desc="智能制造数字化咨询">英飞凌</div>
+            </div>
+          </div>
+          <!-- 交通/地产 -->
+          <div>
+            <div class="flex items-center gap-2 mb-3">
+              <i data-lucide="plane" class="w-4 h-4 text-accent-gold"></i>
+              <span class="text-sm font-semibold text-accent-gold">交通/地产</span>
+            </div>
+            <div class="flex flex-wrap gap-3">
+              <div class="client-card glass-card rounded-lg px-5 py-2.5 text-sm font-medium text-on-surface-variant hover:text-on-surface transition-all cursor-default" data-service="项目合作" data-type="project" data-desc="智慧机场数字化规划与落地">北京大兴机场</div>
+              <div class="client-card glass-card rounded-lg px-5 py-2.5 text-sm font-medium text-on-surface-variant hover:text-on-surface transition-all cursor-default" data-service="咨询项目" data-type="consulting" data-desc="航空数字化旅客体验咨询">南方航空</div>
+              <div class="client-card glass-card rounded-lg px-5 py-2.5 text-sm font-medium text-on-surface-variant hover:text-on-surface transition-all cursor-default" data-service="讲课培训" data-type="lecture" data-desc="智慧物流与数字化转型培训">顺丰集团</div>
+              <div class="client-card glass-card rounded-lg px-5 py-2.5 text-sm font-medium text-on-surface-variant hover:text-on-surface transition-all cursor-default" data-service="讲课培训" data-type="lecture" data-desc="地产数字化转型总裁班授课">万科</div>
+              <div class="client-card glass-card rounded-lg px-5 py-2.5 text-sm font-medium text-on-surface-variant hover:text-on-surface transition-all cursor-default" data-service="咨询项目" data-type="consulting" data-desc="汽车行业数字化营销咨询">广汽集团</div>
+              <div class="client-card glass-card rounded-lg px-5 py-2.5 text-sm font-medium text-on-surface-variant hover:text-on-surface transition-all cursor-default" data-service="讲课培训" data-type="lecture" data-desc="邮政数字化运营实战培训">中国邮政</div>
+            </div>
+          </div>
+          <!-- 通信/能源 -->
+          <div>
+            <div class="flex items-center gap-2 mb-3">
+              <i data-lucide="signal" class="w-4 h-4 text-primary"></i>
+              <span class="text-sm font-semibold text-primary">通信/能源</span>
+            </div>
+            <div class="flex flex-wrap gap-3">
+              <div class="client-card glass-card rounded-lg px-5 py-2.5 text-sm font-medium text-on-surface-variant hover:text-on-surface transition-all cursor-default" data-service="讲课培训" data-type="lecture" data-desc="5G+数字化转型战略培训">中国移动</div>
+              <div class="client-card glass-card rounded-lg px-5 py-2.5 text-sm font-medium text-on-surface-variant hover:text-on-surface transition-all cursor-default" data-service="讲课培训" data-type="lecture" data-desc="数字化商业创新高管培训">中国联通</div>
+              <div class="client-card glass-card rounded-lg px-5 py-2.5 text-sm font-medium text-on-surface-variant hover:text-on-surface transition-all cursor-default" data-service="咨询项目" data-type="consulting" data-desc="云网融合数字化战略咨询">中国电信</div>
+              <div class="client-card glass-card rounded-lg px-5 py-2.5 text-sm font-medium text-on-surface-variant hover:text-on-surface transition-all cursor-default" data-service="讲课培训" data-type="lecture" data-desc="能源数字化转型实战培训">中石油</div>
+              <div class="client-card glass-card rounded-lg px-5 py-2.5 text-sm font-medium text-on-surface-variant hover:text-on-surface transition-all cursor-default" data-service="咨询项目" data-type="consulting" data-desc="智能工厂数字化规划咨询">中石化</div>
+              <div class="client-card glass-card rounded-lg px-5 py-2.5 text-sm font-medium text-on-surface-variant hover:text-on-surface transition-all cursor-default" data-service="讲课培训" data-type="lecture" data-desc="电力数字化与AI赋能培训">国家电网</div>
+              <div class="client-card glass-card rounded-lg px-5 py-2.5 text-sm font-medium text-on-surface-variant hover:text-on-surface transition-all cursor-default" data-service="咨询项目" data-type="consulting" data-desc="医药大健康数字化战略咨询">华润三九</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <div class="section-divider max-w-4xl mx-auto"></div>
+
+    <!-- ============================================ -->
+    <!--  ⑦ 课程体系 — Tab + 卡片 + 展开大纲            -->
+    <!-- ============================================ -->
+    <section id="courses" class="py-20 md:py-28 relative">
+      <div class="absolute inset-0 pointer-events-none">
+        <div class="absolute bottom-0 right-0 w-[600px] h-[400px] rounded-full bg-accent-gold/3 blur-[150px]"></div>
+      </div>
+      <div class="relative max-w-7xl mx-auto px-4 md:px-6">
+        <div class="reveal text-center mb-10">
+          <div class="inline-flex items-center gap-2 mb-4">
+            <div class="w-8 h-[2px] bg-primary"></div>
+            <span class="text-sm font-semibold text-primary tracking-wider">COURSES</span>
+            <div class="w-8 h-[2px] bg-primary"></div>
+          </div>
+          <h2 class="text-3xl md:text-4xl font-bold">课程<span class="gradient-text">体系</span></h2>
+          <p class="text-on-surface-variant mt-3 max-w-2xl mx-auto">从认知普及到实战落地，12门精品课程覆盖数智化全链路</p>
+        </div>
+
+        <!-- Tab 切换 -->
+        <div class="reveal flex justify-center gap-3 mb-10">
+          <button class="course-tab active px-6 py-2.5 rounded-xl text-sm font-semibold transition-all" data-tab="digital">
+            <i data-lucide="cpu" class="w-4 h-4 inline-block mr-1 -mt-0.5"></i>数字化战略
+          </button>
+          <button class="course-tab px-6 py-2.5 rounded-xl text-sm font-semibold transition-all" data-tab="marketing">
+            <i data-lucide="megaphone" class="w-4 h-4 inline-block mr-1 -mt-0.5"></i>数字化营销
+          </button>
+        </div>
+
+        <!-- 数字化战略课程 -->
+        <div id="tab-digital" class="course-panel">
+          <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
+
+            <!-- 课程1 -->
+            <div class="glass-card rounded-2xl overflow-hidden group hover:border-primary/30 hover:bg-primary/5 hover:shadow-[0_0_30px_rgba(20,184,166,0.15)] transition-all duration-500 hover:-translate-y-1">
+              <div class="p-5">
+                <div class="flex items-center gap-2 mb-3">
+                  <div class="w-8 h-8 rounded-lg bg-primary/10 flex items-center justify-center group-hover:bg-primary/20 group-hover:shadow-[0_0_15px_rgba(20,184,166,0.3)] transition-all duration-300">
+                    <i data-lucide="brain" class="w-4 h-4 text-primary group-hover:text-white transition-colors duration-300"></i>
+                  </div>
+                  <span class="text-[10px] px-2 py-0.5 rounded-full bg-primary/15 text-primary font-semibold">2天工作坊</span>
+                </div>
+                <h3 class="font-bold text-base mb-2 leading-snug group-hover:text-primary transition-colors duration-300">AI营销工作坊：从架构规划到精益落地</h3>
+                <p class="text-xs text-on-surface-variant mb-3 leading-relaxed">无需编程基础，从营销架构拆解到Agent搭建，2天产出可运行的营销智能体。</p>
+                <div class="flex flex-wrap gap-1.5 mb-4">
+                  <span class="text-[10px] px-2 py-0.5 rounded-full bg-surface-container text-on-surface-variant">中小企业老板</span>
+                  <span class="text-[10px] px-2 py-0.5 rounded-full bg-surface-container text-on-surface-variant">营销总监</span>
+                  <span class="text-[10px] px-2 py-0.5 rounded-full bg-surface-container text-on-surface-variant">运营负责人</span>
+                </div>
+                <button class="outline-toggle w-full text-center py-2 rounded-lg bg-surface-container/60 text-sm text-primary font-medium hover:bg-primary/20 transition-all duration-300 flex items-center justify-center gap-1.5">
+                  <i data-lucide="chevron-down" class="w-4 h-4 transition-transform"></i>
+                  查看大纲
+                </button>
+              </div>
+              <div class="course-outline">
+                <div class="px-5 pb-5 border-t border-outline-variant/20 pt-4">
+                  <div class="space-y-4 text-xs text-on-surface-variant">
+                    <div>
+                      <div class="font-semibold text-on-surface mb-1.5">Day 1: 梳理营销架构，搭建Agent</div>
+                      <div class="space-y-1 pl-3 border-l-2 border-primary/30">
+                        <div class="py-1">9:00 开篇 &amp; 营销智能体全景</div>
+                        <div class="py-1">10:30 1主+N子架构设计（营销架构）</div>
+                        <div class="py-1">14:00 开发优先级制定（营销价值排序）</div>
+                        <div class="py-1">14:30 平台准备 &amp; 搭建主Agent</div>
+                      </div>
+                    </div>
+                    <div>
+                      <div class="font-semibold text-on-surface mb-1.5">Day 2: 子Agent搭建，端到端能力</div>
+                      <div class="space-y-1 pl-3 border-l-2 border-accent-gold/30">
+                        <div class="py-1">9:00 复习 &amp; Day2目标说明</div>
+                        <div class="py-1">9:30 子Agent搭建（流量/转化/客单/复购）</div>
+                        <div class="py-1">14:00 端到端测试 &amp; 精益交互设计</div>
+                        <div class="py-1">15:30 成果汇报 &amp; 总结</div>
+                      </div>
+                    </div>
+                    <div class="pt-2 border-t border-outline-variant/20">
+                      <div class="font-semibold text-primary mb-1">课程收益</div>
+                      <div>掌握AI智能体架构设计方法论 · 完成架构蓝图 · 现场搭建可运行智能体 · 带走可复用模板</div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- 课程2 -->
+            <div class="glass-card rounded-2xl overflow-hidden group hover:border-accent-cyan/30 hover:bg-accent-cyan/5 hover:shadow-[0_0_30px_rgba(6,182,212,0.15)] transition-all duration-500 hover:-translate-y-1">
+              <div class="p-5">
+                <div class="flex items-center gap-2 mb-3">
+                  <div class="w-8 h-8 rounded-lg bg-accent-cyan/10 flex items-center justify-center group-hover:bg-accent-cyan/20 group-hover:shadow-[0_0_15px_rgba(6,182,212,0.3)] transition-all duration-300">
+                    <i data-lucide="shopping-bag" class="w-4 h-4 text-accent-cyan group-hover:text-white transition-colors duration-300"></i>
+                  </div>
+                  <span class="text-[10px] px-2 py-0.5 rounded-full bg-accent-cyan/15 text-accent-cyan font-semibold">1天</span>
+                </div>
+                <h3 class="font-bold text-base mb-2 leading-snug group-hover:text-accent-cyan transition-colors duration-300">AI在快消品行业应用与实践</h3>
+                <p class="text-xs text-on-surface-variant mb-3 leading-relaxed">聚焦快消行业AI应用场景，从消费者洞察到供应链优化的全链路AI实践。</p>
+                <div class="flex flex-wrap gap-1.5 mb-4">
+                  <span class="text-[10px] px-2 py-0.5 rounded-full bg-surface-container text-on-surface-variant">快消品企业</span>
+                  <span class="text-[10px] px-2 py-0.5 rounded-full bg-surface-container text-on-surface-variant">品牌管理者</span>
+                </div>
+                <button class="outline-toggle w-full text-center py-2 rounded-lg bg-surface-container/60 text-sm text-accent-cyan font-medium hover:bg-accent-cyan/20 transition-all duration-300 flex items-center justify-center gap-1.5">
+                  <i data-lucide="chevron-down" class="w-4 h-4 transition-transform"></i>
+                  查看大纲
+                </button>
+              </div>
+              <div class="course-outline">
+                <div class="px-5 pb-5 border-t border-outline-variant/20 pt-4">
+                  <div class="space-y-4 text-xs text-on-surface-variant max-h-64 overflow-y-auto pr-2">
+                    <div>
+                      <div class="font-semibold text-on-surface mb-1.5">上午：AI在快消行业的应用全景</div>
+                      <div class="space-y-1 pl-3 border-l-2 border-primary/30">
+                        <div class="py-1">9:00 AI技术趋势与快消行业机遇</div>
+                        <div class="py-1">9:45 AI在消费者洞察中的应用</div>
+                        <div class="py-1">10:30 AI驱动的产品创新与研发加速</div>
+                        <div class="py-1">11:15 案例拆解：头部快消品牌AI实践</div>
+                      </div>
+                    </div>
+                    <div>
+                      <div class="font-semibold text-on-surface mb-1.5">下午：AI落地实践与工作坊</div>
+                      <div class="space-y-1 pl-3 border-l-2 border-accent-gold/30">
+                        <div class="py-1">14:00 AI在营销与渠道管理中的应用</div>
+                        <div class="py-1">14:45 AI在供应链优化中的应用</div>
+                        <div class="py-1">15:30 实操工作坊：企业AI应用场景识别</div>
+                        <div class="py-1">16:30 行动计划制定与分享</div>
+                      </div>
+                    </div>
+                    <div class="pt-2 border-t border-outline-variant/20">
+                      <div class="font-semibold text-primary mb-1">课程收益</div>
+                      <div>掌握快消行业AI应用全景 · 学习头部品牌AI实践经验 · 输出企业AI应用场景清单 · 制定可落地行动计划</div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- 课程3 -->
+            <div class="glass-card rounded-2xl overflow-hidden group hover:border-primary/30 hover:bg-primary/5 hover:shadow-[0_0_30px_rgba(20,184,166,0.15)] transition-all duration-500 hover:-translate-y-1">
+              <div class="p-5">
+                <div class="flex items-center gap-2 mb-3">
+                  <div class="w-8 h-8 rounded-lg bg-primary/10 flex items-center justify-center group-hover:bg-primary/20 group-hover:shadow-[0_0_15px_rgba(20,184,166,0.3)] transition-all duration-300">
+                    <i data-lucide="workflow" class="w-4 h-4 text-primary group-hover:text-white transition-colors duration-300"></i>
+                  </div>
+                  <span class="text-[10px] px-2 py-0.5 rounded-full bg-primary/15 text-primary font-semibold">2天工作坊</span>
+                </div>
+                <h3 class="font-bold text-base mb-2 leading-snug group-hover:text-primary transition-colors duration-300">AI实战工作坊：从流程再造到人效提升</h3>
+                <p class="text-xs text-on-surface-variant mb-3 leading-relaxed">从岗位工作流优化出发，输出智能体需求描述，搭建3个实用Agent。</p>
+                <div class="flex flex-wrap gap-1.5 mb-4">
+                  <span class="text-[10px] px-2 py-0.5 rounded-full bg-surface-container text-on-surface-variant">企业管理层</span>
+                  <span class="text-[10px] px-2 py-0.5 rounded-full bg-surface-container text-on-surface-variant">业务负责人</span>
+                </div>
+                <button class="outline-toggle w-full text-center py-2 rounded-lg bg-surface-container/60 text-sm text-primary font-medium hover:bg-primary/20 transition-all duration-300 flex items-center justify-center gap-1.5">
+                  <i data-lucide="chevron-down" class="w-4 h-4 transition-transform"></i>
+                  查看大纲
+                </button>
+              </div>
+              <div class="course-outline">
+                <div class="px-5 pb-5 border-t border-outline-variant/20 pt-4">
+                  <div class="space-y-4 text-xs text-on-surface-variant">
+                    <div>
+                      <div class="font-semibold text-on-surface mb-1.5">Day 1: 岗位工作流优化</div>
+                      <div class="space-y-1 pl-3 border-l-2 border-primary/30">
+                        <div class="py-1">9:00 工作流拆解与痛点识别</div>
+                        <div class="py-1">10:30 输出《智能体需求描述》</div>
+                        <div class="py-1">14:00 AI工具选型与平台搭建</div>
+                      </div>
+                    </div>
+                    <div>
+                      <div class="font-semibold text-on-surface mb-1.5">Day 2: 根据工作流搭建3个Agent</div>
+                      <div class="space-y-1 pl-3 border-l-2 border-accent-gold/30">
+                        <div class="py-1">9:00 Agent搭建实操</div>
+                        <div class="py-1">14:00 端到端测试与优化</div>
+                        <div class="py-1">15:30 成果汇报与工具模板交付</div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- 课程4 -->
+            <div class="glass-card rounded-2xl overflow-hidden group hover:border-accent-gold/30 hover:bg-accent-gold/5 hover:shadow-[0_0_30px_rgba(201,168,76,0.15)] transition-all duration-500 hover:-translate-y-1">
+              <div class="p-5">
+                <div class="flex items-center gap-2 mb-3">
+                  <div class="w-8 h-8 rounded-lg bg-accent-gold/10 flex items-center justify-center group-hover:bg-accent-gold/20 group-hover:shadow-[0_0_15px_rgba(201,168,76,0.3)] transition-all duration-300">
+                    <i data-lucide="target" class="w-4 h-4 text-accent-gold group-hover:text-white transition-colors duration-300"></i>
+                  </div>
+                  <span class="text-[10px] px-2 py-0.5 rounded-full bg-accent-gold/15 text-accent-gold font-semibold">2天工作坊</span>
+                </div>
+                <h3 class="font-bold text-base mb-2 leading-snug group-hover:text-accent-gold transition-colors duration-300">AI转型战略工作坊：AI应用与实施路径</h3>
+                <p class="text-xs text-on-surface-variant mb-3 leading-relaxed">六图法层层递进，从战略到路径，2天产出公司级AI战略规划蓝图。</p>
+                <div class="flex flex-wrap gap-1.5 mb-4">
+                  <span class="text-[10px] px-2 py-0.5 rounded-full bg-surface-container text-on-surface-variant">企业高管</span>
+                  <span class="text-[10px] px-2 py-0.5 rounded-full bg-surface-container text-on-surface-variant">CTO/CIO</span>
+                </div>
+                <button class="outline-toggle w-full text-center py-2 rounded-lg bg-surface-container/60 text-sm text-accent-gold font-medium hover:bg-accent-gold/20 transition-all duration-300 flex items-center justify-center gap-1.5">
+                  <i data-lucide="chevron-down" class="w-4 h-4 transition-transform"></i>
+                  查看大纲
+                </button>
+              </div>
+              <div class="course-outline">
+                <div class="px-5 pb-5 border-t border-outline-variant/20 pt-4">
+                  <div class="space-y-4 text-xs text-on-surface-variant">
+                    <div>
+                      <div class="font-semibold text-on-surface mb-1.5">（一）通识阶段：基础知识普及</div>
+                      <div class="space-y-1 pl-3 border-l-2 border-primary/30">
+                        <div class="py-1">半天-1天，面向认知普及</div>
+                        <div class="py-1">AI技术趋势与商业应用全景</div>
+                      </div>
+                    </div>
+                    <div>
+                      <div class="font-semibold text-on-surface mb-1.5">（二）落地阶段：AI转型战略工作坊</div>
+                      <div class="space-y-1 pl-3 border-l-2 border-accent-gold/30">
+                        <div class="py-1">2天共创型，面向落地和结果</div>
+                        <div class="py-1">六图法：从战略到路径系统化蓝图</div>
+                      </div>
+                    </div>
+                    <div class="pt-2 border-t border-outline-variant/20">
+                      <div class="font-semibold text-primary mb-1">核心价值</div>
+                      <div>不是理论灌输而是实战演练 · 不是IT独角戏而是业务技术共创 · 不是碎片化点子而是系统化蓝图 · 不是纸上谈兵而是工具赋能</div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- 课程5 -->
+            <div class="glass-card rounded-2xl overflow-hidden group hover:border-primary/20 transition-all">
+              <div class="p-5">
+                <div class="flex items-center gap-2 mb-3">
+                  <div class="w-8 h-8 rounded-lg bg-primary/10 flex items-center justify-center">
+                    <i data-lucide="layers" class="w-4 h-4 text-primary"></i>
+                  </div>
+                  <span class="text-[10px] px-2 py-0.5 rounded-full bg-primary/15 text-primary font-semibold">系统课</span>
+                </div>
+                <h3 class="font-bold text-base mb-2 leading-snug">数字化转型：顶层规划到落地执行</h3>
+                <p class="text-xs text-on-surface-variant mb-3 leading-relaxed">从战略规划到组织变革，帮助企业系统构建数字化转型能力。</p>
+                <div class="flex flex-wrap gap-1.5 mb-4">
+                  <span class="text-[10px] px-2 py-0.5 rounded-full bg-surface-container text-on-surface-variant">企业决策层</span>
+                  <span class="text-[10px] px-2 py-0.5 rounded-full bg-surface-container text-on-surface-variant">转型负责人</span>
+                </div>
+                <button class="outline-toggle w-full text-center py-2 rounded-lg bg-surface-container/60 text-sm text-primary font-medium hover:bg-primary/10 transition-colors flex items-center justify-center gap-1.5">
+                  <i data-lucide="chevron-down" class="w-4 h-4 transition-transform"></i>
+                  查看大纲
+                </button>
+              </div>
+              <div class="course-outline">
+                <div class="px-5 pb-5 border-t border-outline-variant/20 pt-4">
+
+                  <div class="space-y-4 text-xs text-on-surface-variant max-h-64 overflow-y-auto pr-2">
+                    <div>
+                      <div class="font-semibold text-on-surface mb-1.5">模块一：数字化转型的本质与路径</div>
+                      <div class="space-y-1 pl-3 border-l-2 border-primary/30">
+                        <div class="py-1">数字化转型的本质：从技术驱动到商业重构</div>
+                        <div class="py-1">转型的五大路径：业务、组织、技术、数据、生态</div>
+                        <div class="py-1">标杆案例：阿里、京东、美的的转型实践</div>
+                      </div>
+                    </div>
+                    <div>
+                      <div class="font-semibold text-on-surface mb-1.5">模块二：顶层规划与战略设计</div>
+                      <div class="space-y-1 pl-3 border-l-2 border-primary/30">
+                        <div class="py-1">数字化战略3层架构设计</div>
+                        <div class="py-1">业务价值地图与数字化机会识别</div>
+                        <div class="py-1">转型路线图制定：3年规划与分阶段实施</div>
+                      </div>
+                    </div>
+                    <div>
+                      <div class="font-semibold text-on-surface mb-1.5">模块三：落地执行与组织保障</div>
+                      <div class="space-y-1 pl-3 border-l-2 border-accent-gold/30">
+                        <div class="py-1">数字化组织架构设计与人才体系</div>
+                        <div class="py-1">数据中台与业务中台建设</div>
+                        <div class="py-1">转型项目管理与风险管控</div>
+                        <div class="py-1">变革管理：如何推动组织协同</div>
+                      </div>
+                    </div>
+                    <div class="pt-2 border-t border-outline-variant/20">
+                      <div class="font-semibold text-primary mb-1">课程收益</div>
+                      <div>掌握数字化转型全貌 · 学会顶层规划方法论 · 输出企业转型路线图 · 建立组织保障体系</div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- 课程6 -->
+            <div class="glass-card rounded-2xl overflow-hidden group hover:border-primary/20 transition-all">
+              <div class="p-5">
+                <div class="flex items-center gap-2 mb-3">
+                  <div class="w-8 h-8 rounded-lg bg-accent-cyan/10 flex items-center justify-center">
+                    <i data-lucide="lightbulb" class="w-4 h-4 text-accent-cyan"></i>
+                  </div>
+                  <span class="text-[10px] px-2 py-0.5 rounded-full bg-accent-cyan/15 text-accent-cyan font-semibold">认知课</span>
+                </div>
+                <h3 class="font-bold text-base mb-2 leading-snug">数字化转型：认知基础</h3>
+                <p class="text-xs text-on-surface-variant mb-3 leading-relaxed">适合数字化认知阶段的企业，建立统一的数字化思维和语言体系。</p>
+                <div class="flex flex-wrap gap-1.5 mb-4">
+                  <span class="text-[10px] px-2 py-0.5 rounded-full bg-surface-container text-on-surface-variant">初转型企业</span>
+                </div>
+                <button class="outline-toggle w-full text-center py-2 rounded-lg bg-surface-container/60 text-sm text-primary font-medium hover:bg-primary/10 transition-colors flex items-center justify-center gap-1.5">
+                  <i data-lucide="chevron-down" class="w-4 h-4 transition-transform"></i>
+                  查看大纲
+                </button>
+              </div>
+              <div class="course-outline">
+                <div class="px-5 pb-5 border-t border-outline-variant/20 pt-4">
+
+                  <div class="space-y-4 text-xs text-on-surface-variant max-h-64 overflow-y-auto pr-2">
+                    <div>
+                      <div class="font-semibold text-on-surface mb-1.5">模块一：重新认识数字化</div>
+                      <div class="space-y-1 pl-3 border-l-2 border-primary/30">
+                        <div class="py-1">从IT到DT：数字化的本质变迁</div>
+                        <div class="py-1">数字化vs信息化：关键差异与联系</div>
+                        <div class="py-1">全球数字化发展现状与趋势</div>
+                      </div>
+                    </div>
+                    <div>
+                      <div class="font-semibold text-on-surface mb-1.5">模块二：数字化的商业逻辑</div>
+                      <div class="space-y-1 pl-3 border-l-2 border-primary/30">
+                        <div class="py-1">数字化的3个商业驱动力</div>
+                        <div class="py-1">数字化的4种商业模式</div>
+                        <div class="py-1">行业数字化成熟度评估</div>
+                      </div>
+                    </div>
+                    <div>
+                      <div class="font-semibold text-on-surface mb-1.5">模块三：数字化思维升级</div>
+                      <div class="space-y-1 pl-3 border-l-2 border-accent-gold/30">
+                        <div class="py-1">从线性思维到平台思维</div>
+                        <div class="py-1">从经验决策到数据决策</div>
+                        <div class="py-1">从产品导向到客户导向</div>
+                        <div class="py-1">互动研讨：我们离数字化还有多远</div>
+                      </div>
+                    </div>
+                    <div class="pt-2 border-t border-outline-variant/20">
+                      <div class="font-semibold text-primary mb-1">课程收益</div>
+                      <div>建立数字化全局认知 · 理解数字化的商业本质 · 转变数字化思维模式 · 评估企业数字化现状</div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- 数字化营销课程 -->
+        <div id="tab-marketing" class="course-panel hidden">
+          <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
+
+            <div class="glass-card rounded-2xl overflow-hidden group hover:border-accent-cyan/40 hover:bg-accent-cyan/5 hover:shadow-[0_0_30px_rgba(6,182,212,0.2)] transition-all duration-500 hover:-translate-y-1 border-accent-cyan/30">
+              <div class="p-5">
+                <div class="flex items-center gap-2 mb-3">
+                  <div class="w-8 h-8 rounded-lg bg-gradient-to-br from-primary to-accent-cyan flex items-center justify-center group-hover:shadow-[0_0_15px_rgba(20,184,166,0.4)] group-hover:scale-110 transition-all duration-300">
+                    <i data-lucide="brain" class="w-4 h-4 text-white"></i>
+                  </div>
+                  <span class="text-[10px] px-2 py-0.5 rounded-full bg-gradient-to-r from-primary/20 to-accent-cyan/20 text-primary font-semibold">新课上线</span>
+                </div>
+                <h3 class="font-bold text-base mb-2 leading-snug group-hover:text-accent-cyan transition-colors duration-300">AI营销：从入门到精通</h3>
+                <p class="text-xs text-on-surface-variant mb-3 leading-relaxed">系统掌握AI驱动营销增长方法论，从提示词工程到智能体开发实战。</p>
+                <div class="flex flex-wrap gap-1.5 mb-4">
+                  <span class="text-[10px] px-2 py-0.5 rounded-full bg-surface-container text-on-surface-variant">营销总监</span>
+                  <span class="text-[10px] px-2 py-0.5 rounded-full bg-surface-container text-on-surface-variant">AI从业者</span>
+                  <span class="text-[10px] px-2 py-0.5 rounded-full bg-surface-container text-on-surface-variant">企业高管</span>
+                </div>
+                <a href="course-outline.html" class="outline-toggle w-full text-center py-2 rounded-lg bg-gradient-to-r from-primary to-accent-cyan text-sm font-semibold text-white hover:opacity-90 hover:shadow-[0_0_25px_rgba(20,184,166,0.4)] transition-all duration-300 flex items-center justify-center gap-1.5 shadow-[0_0_20px_rgba(20,184,166,0.3)]">
+                  <i data-lucide="external-link" class="w-4 h-4"></i>
+                  查看完整大纲
+                </a>
+              </div>
+            </div>
+
+            <div class="glass-card rounded-2xl overflow-hidden group hover:border-primary/30 hover:bg-primary/5 hover:shadow-[0_0_30px_rgba(20,184,166,0.15)] transition-all duration-500 hover:-translate-y-1">
+              <div class="p-5">
+                <div class="flex items-center gap-2 mb-3">
+                  <div class="w-8 h-8 rounded-lg bg-primary/10 flex items-center justify-center group-hover:bg-primary/20 group-hover:shadow-[0_0_15px_rgba(20,184,166,0.3)] transition-all duration-300">
+                    <i data-lucide="repeat" class="w-4 h-4 text-primary group-hover:text-white transition-colors duration-300"></i>
+                  </div>
+                  <span class="text-[10px] px-2 py-0.5 rounded-full bg-primary/15 text-primary font-semibold">转型课</span>
+                </div>
+                <h3 class="font-bold text-base mb-2 leading-snug">DTC营销转型：从产品渠道到客户导向</h3>
+                <p class="text-xs text-on-surface-variant mb-3 leading-relaxed">帮助企业从传统渠道思维转向DTC直连消费者模式。</p>
+                <div class="flex flex-wrap gap-1.5 mb-4">
+                  <span class="text-[10px] px-2 py-0.5 rounded-full bg-surface-container text-on-surface-variant">品牌企业</span>
+                  <span class="text-[10px] px-2 py-0.5 rounded-full bg-surface-container text-on-surface-variant">新消费品牌</span>
+                </div>
+                <button class="outline-toggle w-full text-center py-2 rounded-lg bg-surface-container/60 text-sm text-primary font-medium hover:bg-primary/10 transition-colors flex items-center justify-center gap-1.5">
+                  <i data-lucide="chevron-down" class="w-4 h-4 transition-transform"></i>
+                  查看大纲
+                </button>
+              </div>
+              <div class="course-outline">
+                <div class="px-5 pb-5 border-t border-outline-variant/20 pt-4">
+
+                  <div class="space-y-4 text-xs text-on-surface-variant max-h-64 overflow-y-auto pr-2">
+                    <div>
+                      <div class="font-semibold text-on-surface mb-1.5">模块一：DTC转型——品牌增长新引擎</div>
+                      <div class="space-y-1 pl-3 border-l-2 border-primary/30">
+                        <div class="py-1">DTC模式解析：从渠道驱动到用户驱动</div>
+                        <div class="py-1">DTC转型的3大核心：直面消费者·数据驱动·全域运营</div>
+                        <div class="py-1">案例拆解：完美日记、花西子DTC路径</div>
+                      </div>
+                    </div>
+                    <div>
+                      <div class="font-semibold text-on-surface mb-1.5">模块二：用户运营与私域构建</div>
+                      <div class="space-y-1 pl-3 border-l-2 border-primary/30">
+                        <div class="py-1">用户全生命周期价值管理</div>
+                        <div class="py-1">私域流量池构建与运营体系</div>
+                        <div class="py-1">会员体系设计与忠诚度经营</div>
+                      </div>
+                    </div>
+                    <div>
+                      <div class="font-semibold text-on-surface mb-1.5">模块三：DTC落地实施</div>
+                      <div class="space-y-1 pl-3 border-l-2 border-accent-gold/30">
+                        <div class="py-1">DTC组织架构与能力模型</div>
+                        <div class="py-1">全域营销与渠道协同</div>
+                        <div class="py-1">DTC转型路线图与关键指标</div>
+                        <div class="py-1">工作坊：企业DTC转型路径规划</div>
+                      </div>
+                    </div>
+                    <div class="pt-2 border-t border-outline-variant/20">
+                      <div class="font-semibold text-primary mb-1">课程收益</div>
+                      <div>理解DTC模式核心逻辑 · 掌握用户运营体系设计 · 构建私域运营能力 · 输出DTC转型路径</div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div class="glass-card rounded-2xl overflow-hidden group hover:border-accent-gold/30 hover:bg-accent-gold/5 hover:shadow-[0_0_30px_rgba(201,168,76,0.15)] transition-all duration-500 hover:-translate-y-1">
+              <div class="p-5">
+                <div class="flex items-center gap-2 mb-3">
+                  <div class="w-8 h-8 rounded-lg bg-accent-gold/10 flex items-center justify-center group-hover:bg-accent-gold/20 group-hover:shadow-[0_0_15px_rgba(201,168,76,0.3)] transition-all duration-300">
+                    <i data-lucide="rocket" class="w-4 h-4 text-accent-gold group-hover:text-white transition-colors duration-300"></i>
+                  </div>
+                  <span class="text-[10px] px-2 py-0.5 rounded-full bg-accent-gold/15 text-accent-gold font-semibold">实战课</span>
+                </div>
+                <h3 class="font-bold text-base mb-2 leading-snug group-hover:text-accent-gold transition-colors duration-300">营销策略创新与执行</h3>
+                <p class="text-xs text-on-surface-variant mb-3 leading-relaxed">从策略设计到落地执行，打通营销创新最后一公里。</p>
+                <div class="flex flex-wrap gap-1.5 mb-4">
+                  <span class="text-[10px] px-2 py-0.5 rounded-full bg-surface-container text-on-surface-variant">市场部</span>
+                </div>
+                <button class="outline-toggle w-full text-center py-2 rounded-lg bg-surface-container/60 text-sm text-accent-gold font-medium hover:bg-accent-gold/20 transition-all duration-300 flex items-center justify-center gap-1.5">
+                  <i data-lucide="chevron-down" class="w-4 h-4 transition-transform"></i>
+                  查看大纲
+                </button>
+              </div>
+              <div class="course-outline">
+                <div class="px-5 pb-5 border-t border-outline-variant/20 pt-4">
+
+                  <div class="space-y-4 text-xs text-on-surface-variant max-h-64 overflow-y-auto pr-2">
+                    <div>
+                      <div class="font-semibold text-on-surface mb-1.5">模块一：营销策略新思维</div>
+                      <div class="space-y-1 pl-3 border-l-2 border-primary/30">
+                        <div class="py-1">数字化时代营销环境巨变</div>
+                        <div class="py-1">从4P到4C再到4R的营销进化</div>
+                        <div class="py-1">营销创新的核心驱动力</div>
+                      </div>
+                    </div>
+                    <div>
+                      <div class="font-semibold text-on-surface mb-1.5">模块二：营销策略设计与创新</div>
+                      <div class="space-y-1 pl-3 border-l-2 border-primary/30">
+                        <div class="py-1">STP精准定位方法论</div>
+                        <div class="py-1">产品创新与定价策略</div>
+                        <div class="py-1">渠道策略与终端动销</div>
+                        <div class="py-1">品牌传播与内容营销创新</div>
+                      </div>
+                    </div>
+                    <div>
+                      <div class="font-semibold text-on-surface mb-1.5">模块三：策略执行与效果评估</div>
+                      <div class="space-y-1 pl-3 border-l-2 border-accent-gold/30">
+                        <div class="py-1">营销预算分配与ROI优化</div>
+                        <div class="py-1">营销效果监测与数据驱动迭代</div>
+                        <div class="py-1">营销组织与团队管理</div>
+                        <div class="py-1">实战演练：企业营销策略制定</div>
+                      </div>
+                    </div>
+                    <div class="pt-2 border-t border-outline-variant/20">
+                      <div class="font-semibold text-primary mb-1">课程收益</div>
+                      <div>建立营销创新思维 · 掌握策略设计方法论 · 提升营销执行效率 · 数据驱动营销决策</div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div class="glass-card rounded-2xl overflow-hidden group hover:border-primary/30 hover:bg-primary/5 hover:shadow-[0_0_30px_rgba(20,184,166,0.15)] transition-all duration-500 hover:-translate-y-1">
+              <div class="p-5">
+                <div class="flex items-center gap-2 mb-3">
+                  <div class="w-8 h-8 rounded-lg bg-primary/10 flex items-center justify-center group-hover:bg-primary/20 group-hover:shadow-[0_0_15px_rgba(20,184,166,0.3)] transition-all duration-300">
+                    <i data-lucide="user-circle" class="w-4 h-4 text-primary group-hover:text-white transition-colors duration-300"></i>
+                  </div>
+                  <span class="text-[10px] px-2 py-0.5 rounded-full bg-primary/15 text-primary font-semibold">方法课</span>
+                </div>
+                <h3 class="font-bold text-base mb-2 leading-snug group-hover:text-primary transition-colors duration-300">数字新生代：客户画像与价值体验设计</h3>
+                <p class="text-xs text-on-surface-variant mb-3 leading-relaxed">已得到200多家企业验证，精准洞察客户需求与价值体验设计方法论。</p>
+                <div class="flex flex-wrap gap-1.5 mb-4">
+                  <span class="text-[10px] px-2 py-0.5 rounded-full bg-surface-container text-on-surface-variant">产品经理</span>
+                  <span class="text-[10px] px-2 py-0.5 rounded-full bg-surface-container text-on-surface-variant">用户体验</span>
+                </div>
+                <button class="outline-toggle w-full text-center py-2 rounded-lg bg-surface-container/60 text-sm text-primary font-medium hover:bg-primary/20 transition-all duration-300 flex items-center justify-center gap-1.5">
+                  <i data-lucide="chevron-down" class="w-4 h-4 transition-transform"></i>
+                  查看大纲
+                </button>
+              </div>
+              <div class="course-outline">
+                <div class="px-5 pb-5 border-t border-outline-variant/20 pt-4">
+
+                  <div class="space-y-4 text-xs text-on-surface-variant max-h-64 overflow-y-auto pr-2">
+                    <div>
+                      <div class="font-semibold text-on-surface mb-1.5">模块一：新生代消费者洞察</div>
+                      <div class="space-y-1 pl-3 border-l-2 border-primary/30">
+                        <div class="py-1">Z世代与千禧一代消费特征</div>
+                        <div class="py-1">消费代际差异与市场机会</div>
+                        <div class="py-1">新生代消费决策路径解析</div>
+                      </div>
+                    </div>
+                    <div>
+                      <div class="font-semibold text-on-surface mb-1.5">模块二：客户画像构建</div>
+                      <div class="space-y-1 pl-3 border-l-2 border-primary/30">
+                        <div class="py-1">客户数据采集与标签体系设计</div>
+                        <div class="py-1">360度客户画像构建方法</div>
+                        <div class="py-1">客户分群与精准营销策略</div>
+                      </div>
+                    </div>
+                    <div>
+                      <div class="font-semibold text-on-surface mb-1.5">模块三：客户价值体验设计</div>
+                      <div class="space-y-1 pl-3 border-l-2 border-accent-gold/30">
+                        <div class="py-1">客户旅程地图绘制与痛点识别</div>
+                        <div class="py-1">关键触点体验设计</div>
+                        <div class="py-1">客户体验指标体系与持续优化</div>
+                        <div class="py-1">实战演练：客户画像与体验蓝图</div>
+                      </div>
+                    </div>
+                    <div class="pt-2 border-t border-outline-variant/20">
+                      <div class="font-semibold text-primary mb-1">课程收益</div>
+                      <div>深入洞察新生代消费 · 掌握画像构建方法 · 设计客户价值体验 · 提升客户粘性与忠诚度</div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div class="glass-card rounded-2xl overflow-hidden group hover:border-accent-cyan/30 hover:bg-accent-cyan/5 hover:shadow-[0_0_30px_rgba(6,182,212,0.15)] transition-all duration-500 hover:-translate-y-1">
+              <div class="p-5">
+                <div class="flex items-center gap-2 mb-3">
+                  <div class="w-8 h-8 rounded-lg bg-accent-cyan/10 flex items-center justify-center group-hover:bg-accent-cyan/20 group-hover:shadow-[0_0_15px_rgba(6,182,212,0.3)] transition-all duration-300">
+                    <i data-lucide="store" class="w-4 h-4 text-accent-cyan group-hover:text-white transition-colors duration-300"></i>
+                  </div>
+                  <span class="text-[10px] px-2 py-0.5 rounded-full bg-accent-cyan/15 text-accent-cyan font-semibold">实战课</span>
+                </div>
+                <h3 class="font-bold text-base mb-2 leading-snug group-hover:text-accent-cyan transition-colors duration-300">新零售认知与实践</h3>
+                <p class="text-xs text-on-surface-variant mb-3 leading-relaxed">从新零售底层逻辑到全渠道运营实践，打通线上线下融合路径。</p>
+                <div class="flex flex-wrap gap-1.5 mb-4">
+                  <span class="text-[10px] px-2 py-0.5 rounded-full bg-surface-container text-on-surface-variant">零售企业</span>
+                </div>
+                <button class="outline-toggle w-full text-center py-2 rounded-lg bg-surface-container/60 text-sm text-accent-cyan font-medium hover:bg-accent-cyan/20 transition-all duration-300 flex items-center justify-center gap-1.5">
+                  <i data-lucide="chevron-down" class="w-4 h-4 transition-transform"></i>
+                  查看大纲
+                </button>
+              </div>
+              <div class="course-outline">
+                <div class="px-5 pb-5 border-t border-outline-variant/20 pt-4">
+
+                  <div class="space-y-4 text-xs text-on-surface-variant max-h-64 overflow-y-auto pr-2">
+                    <div>
+                      <div class="font-semibold text-on-surface mb-1.5">模块一：新零售的本质与趋势</div>
+                      <div class="space-y-1 pl-3 border-l-2 border-primary/30">
+                        <div class="py-1">新零售的概念溯源与本质解读</div>
+                        <div class="py-1">人·货·场的重构逻辑</div>
+                        <div class="py-1">新零售的6大核心趋势</div>
+                      </div>
+                    </div>
+                    <div>
+                      <div class="font-semibold text-on-surface mb-1.5">模块二：新零售商业模式</div>
+                      <div class="space-y-1 pl-3 border-l-2 border-primary/30">
+                        <div class="py-1">新零售落地画布模型解读</div>
+                        <div class="py-1">全渠道融合与O2O实践</div>
+                        <div class="py-1">智慧门店与数字化运营</div>
+                        <div class="py-1">案例拆解：盒马、瑞幸、名创优品</div>
+                      </div>
+                    </div>
+                    <div>
+                      <div class="font-semibold text-on-surface mb-1.5">模块三：新零售实践路径</div>
+                      <div class="space-y-1 pl-3 border-l-2 border-accent-gold/30">
+                        <div class="py-1">企业新零售能力评估</div>
+                        <div class="py-1">新零售转型的3步走战略</div>
+                        <div class="py-1">供应链数字化与敏捷响应</div>
+                        <div class="py-1">工作坊：企业新零售路径规划</div>
+                      </div>
+                    </div>
+                    <div class="pt-2 border-t border-outline-variant/20">
+                      <div class="font-semibold text-primary mb-1">课程收益</div>
+                      <div>理解新零售核心逻辑 · 掌握新零售落地画布 · 学习标杆案例实践 · 输出转型实施路径</div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div class="glass-card rounded-2xl overflow-hidden group hover:border-accent-gold/30 hover:bg-accent-gold/5 hover:shadow-[0_0_30px_rgba(201,168,76,0.15)] transition-all duration-500 hover:-translate-y-1">
+              <div class="p-5">
+                <div class="flex items-center gap-2 mb-3">
+                  <div class="w-8 h-8 rounded-lg bg-accent-gold/10 flex items-center justify-center group-hover:bg-accent-gold/20 group-hover:shadow-[0_0_15px_rgba(201,168,76,0.3)] transition-all duration-300">
+                    <i data-lucide="video" class="w-4 h-4 text-accent-gold group-hover:text-white transition-colors duration-300"></i>
+                  </div>
+                  <span class="text-[10px] px-2 py-0.5 rounded-full bg-accent-gold/15 text-accent-gold font-semibold">方法课</span>
+                </div>
+                <h3 class="font-bold text-base mb-2 leading-snug group-hover:text-accent-gold transition-colors duration-300">新媒体营销4步法</h3>
+                <p class="text-xs text-on-surface-variant mb-3 leading-relaxed">从内容策划到流量转化，4步构建新媒体营销增长飞轮。</p>
+                <div class="flex flex-wrap gap-1.5 mb-4">
+                  <span class="text-[10px] px-2 py-0.5 rounded-full bg-surface-container text-on-surface-variant">新媒体团队</span>
+                </div>
+                <button class="outline-toggle w-full text-center py-2 rounded-lg bg-surface-container/60 text-sm text-accent-gold font-medium hover:bg-accent-gold/20 transition-all duration-300 flex items-center justify-center gap-1.5">
+                  <i data-lucide="chevron-down" class="w-4 h-4 transition-transform"></i>
+                  查看大纲
+                </button>
+              </div>
+              <div class="course-outline">
+                <div class="px-5 pb-5 border-t border-outline-variant/20 pt-4">
+
+                  <div class="space-y-4 text-xs text-on-surface-variant max-h-64 overflow-y-auto pr-2">
+                    <div>
+                      <div class="font-semibold text-on-surface mb-1.5">第1步：新媒体战略定位</div>
+                      <div class="space-y-1 pl-3 border-l-2 border-primary/30">
+                        <div class="py-1">新媒体营销全景与平台矩阵</div>
+                        <div class="py-1">企业新媒体战略定位4步法</div>
+                        <div class="py-1">内容定位与人设打造</div>
+                      </div>
+                    </div>
+                    <div>
+                      <div class="font-semibold text-on-surface mb-1.5">第2步：内容创作与传播</div>
+                      <div class="space-y-1 pl-3 border-l-2 border-primary/30">
+                        <div class="py-1">爆款内容的创作方法论</div>
+                        <div class="py-1">短视频策划与制作技巧</div>
+                        <div class="py-1">直播带货的运营策略</div>
+                      </div>
+                    </div>
+                    <div>
+                      <div class="font-semibold text-on-surface mb-1.5">第3步：粉丝运营与社群经营</div>
+                      <div class="space-y-1 pl-3 border-l-2 border-accent-gold/30">
+                        <div class="py-1">涨粉策略与流量获取</div>
+                        <div class="py-1">社群运营与用户裂变</div>
+                        <div class="py-1">私域流量与公众号/企微联动</div>
+                      </div>
+                    </div>
+                    <div>
+                      <div class="font-semibold text-on-surface mb-1.5">第4步：数据运营与效果优化</div>
+                      <div class="space-y-1 pl-3 border-l-2 border-accent-gold/30">
+                        <div class="py-1">新媒体数据指标体系</div>
+                        <div class="py-1">数据分析与内容迭代</div>
+                        <div class="py-1">ROI优化与投放策略</div>
+                        <div class="py-1">实战演练：企业新媒体4步法落地</div>
+                      </div>
+                    </div>
+                    <div class="pt-2 border-t border-outline-variant/20">
+                      <div class="font-semibold text-primary mb-1">课程收益</div>
+                      <div>掌握新媒体4步法体系 · 爆款内容创作能力 · 粉丝运营与裂变增长 · 数据驱动效果优化</div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <div class="section-divider max-w-4xl mx-auto"></div>
+
+    <!-- ============================================ -->
+    <!--  ⑧ 授课风采 — 照片墙                   -->
+    <section id="gallery" class="py-20 md:py-28 relative overflow-visible">
+      <div class="max-w-7xl mx-auto px-6">
+        <div class="reveal text-center mb-12">
+          <span class="inline-block text-xs tracking-[0.2em] uppercase text-accent-gold font-semibold mb-3">Teaching Style</span>
+          <h2 class="text-3xl md:text-4xl font-bold text-on-surface">授课风采</h2>
+          <p class="mt-4 text-on-surface-variant max-w-2xl mx-auto">走进清华、北大、武大等名校总裁班，以及各大企业培训现场</p>
+        </div>
+
+        <!-- 紧凑网格照片墙 -->
+        <div class="reveal">
+          <div class="photo-wall grid grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-2 md:gap-3">
+            <div class="photo-wall-item group cursor-pointer relative aspect-[4/3] rounded-lg overflow-hidden" onclick="openPhotoViewer(this)" data-title="北京大学授课">
+              <img src="assets/training-photos/photo-01.png" alt="北京大学授课" class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500" loading="lazy">
+              <div class="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent opacity-0 group-hover:opacity-100 transition-all duration-300 flex items-end justify-center pb-3">
+                <span class="text-xs md:text-sm text-white font-medium text-center px-2 leading-tight drop-shadow-lg">北京大学授课</span>
+              </div>
+            </div>
+            <div class="photo-wall-item group cursor-pointer relative aspect-[4/3] rounded-lg overflow-hidden" onclick="openPhotoViewer(this)" data-title="清华大学授课">
+              <img src="assets/training-photos/photo-02.png" alt="清华大学授课" class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500" loading="lazy">
+              <div class="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent opacity-0 group-hover:opacity-100 transition-all duration-300 flex items-end justify-center pb-3">
+                <span class="text-xs md:text-sm text-white font-medium text-center px-2 leading-tight drop-shadow-lg">清华大学授课</span>
+              </div>
+            </div>
+            <div class="photo-wall-item group cursor-pointer relative aspect-[4/3] rounded-lg overflow-hidden" onclick="openPhotoViewer(this)" data-title="北大融创授课">
+              <img src="assets/training-photos/photo-03.png" alt="北大融创授课" class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500" loading="lazy">
+              <div class="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent opacity-0 group-hover:opacity-100 transition-all duration-300 flex items-end justify-center pb-3">
+                <span class="text-xs md:text-sm text-white font-medium text-center px-2 leading-tight drop-shadow-lg">北大融创授课</span>
+              </div>
+            </div>
+            <div class="photo-wall-item group cursor-pointer relative aspect-[4/3] rounded-lg overflow-hidden" onclick="openPhotoViewer(this)" data-title="武汉大学授课">
+              <img src="assets/training-photos/photo-04.png" alt="武汉大学授课" class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500" loading="lazy">
+              <div class="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent opacity-0 group-hover:opacity-100 transition-all duration-300 flex items-end justify-center pb-3">
+                <span class="text-xs md:text-sm text-white font-medium text-center px-2 leading-tight drop-shadow-lg">武汉大学授课</span>
+              </div>
+            </div>
+            <div class="photo-wall-item group cursor-pointer relative aspect-[4/3] rounded-lg overflow-hidden" onclick="openPhotoViewer(this)" data-title="中山大学授课">
+              <img src="assets/training-photos/photo-05.png" alt="中山大学授课" class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500" loading="lazy">
+              <div class="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent opacity-0 group-hover:opacity-100 transition-all duration-300 flex items-end justify-center pb-3">
+                <span class="text-xs md:text-sm text-white font-medium text-center px-2 leading-tight drop-shadow-lg">中山大学授课</span>
+              </div>
+            </div>
+            <div class="photo-wall-item group cursor-pointer relative aspect-[4/3] rounded-lg overflow-hidden" onclick="openPhotoViewer(this)" data-title="江西财大授课">
+              <img src="assets/training-photos/photo-06.png" alt="江西财大授课" class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500" loading="lazy">
+              <div class="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent opacity-0 group-hover:opacity-100 transition-all duration-300 flex items-end justify-center pb-3">
+                <span class="text-xs md:text-sm text-white font-medium text-center px-2 leading-tight drop-shadow-lg">江西财大授课</span>
+              </div>
+            </div>
+            <div class="photo-wall-item group cursor-pointer relative aspect-[4/3] rounded-lg overflow-hidden" onclick="openPhotoViewer(this)" data-title="广州电视台采访2期">
+              <img src="assets/training-photos/photo-07.png" alt="广州电视台采访2期" class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500" loading="lazy">
+              <div class="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent opacity-0 group-hover:opacity-100 transition-all duration-300 flex items-end justify-center pb-3">
+                <span class="text-xs md:text-sm text-white font-medium text-center px-2 leading-tight drop-shadow-lg">广州电视台采访2期</span>
+              </div>
+            </div>
+            <div class="photo-wall-item group cursor-pointer relative aspect-[4/3] rounded-lg overflow-hidden" onclick="openPhotoViewer(this)" data-title="黑马营授课">
+              <img src="assets/training-photos/photo-08.png" alt="黑马营授课" class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500" loading="lazy">
+              <div class="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent opacity-0 group-hover:opacity-100 transition-all duration-300 flex items-end justify-center pb-3">
+                <span class="text-xs md:text-sm text-white font-medium text-center px-2 leading-tight drop-shadow-lg">黑马营授课</span>
+              </div>
+            </div>
+            <div class="photo-wall-item group cursor-pointer relative aspect-[4/3] rounded-lg overflow-hidden" onclick="openPhotoViewer(this)" data-title="广州电视台采访">
+              <img src="assets/training-photos/photo-09.png" alt="广州电视台采访" class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500" loading="lazy">
+              <div class="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent opacity-0 group-hover:opacity-100 transition-all duration-300 flex items-end justify-center pb-3">
+                <span class="text-xs md:text-sm text-white font-medium text-center px-2 leading-tight drop-shadow-lg">广州电视台采访</span>
+              </div>
+            </div>
+            <div class="photo-wall-item group cursor-pointer relative aspect-[4/3] rounded-lg overflow-hidden" onclick="openPhotoViewer(this)" data-title="海峡两岸交流论坛">
+              <img src="assets/training-photos/photo-10.png" alt="海峡两岸交流论坛" class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500" loading="lazy">
+              <div class="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent opacity-0 group-hover:opacity-100 transition-all duration-300 flex items-end justify-center pb-3">
+                <span class="text-xs md:text-sm text-white font-medium text-center px-2 leading-tight drop-shadow-lg">海峡两岸交流论坛</span>
+              </div>
+            </div>
+            <div class="photo-wall-item group cursor-pointer relative aspect-[4/3] rounded-lg overflow-hidden" onclick="openPhotoViewer(this)" data-title="中国邮政授课">
+              <img src="assets/training-photos/photo-11.png" alt="中国邮政授课" class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500" loading="lazy">
+              <div class="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent opacity-0 group-hover:opacity-100 transition-all duration-300 flex items-end justify-center pb-3">
+                <span class="text-xs md:text-sm text-white font-medium text-center px-2 leading-tight drop-shadow-lg">中国邮政授课</span>
+              </div>
+            </div>
+            <div class="photo-wall-item group cursor-pointer relative aspect-[4/3] rounded-lg overflow-hidden" onclick="openPhotoViewer(this)" data-title="京东云IT论坛">
+              <img src="assets/training-photos/photo-12.png" alt="京东云IT论坛" class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500" loading="lazy">
+              <div class="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent opacity-0 group-hover:opacity-100 transition-all duration-300 flex items-end justify-center pb-3">
+                <span class="text-xs md:text-sm text-white font-medium text-center px-2 leading-tight drop-shadow-lg">京东云IT论坛</span>
+              </div>
+            </div>
+            <div class="photo-wall-item group cursor-pointer relative aspect-[4/3] rounded-lg overflow-hidden" onclick="openPhotoViewer(this)" data-title="佛山电台采访">
+              <img src="assets/training-photos/photo-13.jpg" alt="佛山电台采访" class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500" loading="lazy">
+              <div class="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent opacity-0 group-hover:opacity-100 transition-all duration-300 flex items-end justify-center pb-3">
+                <span class="text-xs md:text-sm text-white font-medium text-center px-2 leading-tight drop-shadow-lg">佛山电台采访</span>
+              </div>
+            </div>
+            <div class="photo-wall-item group cursor-pointer relative aspect-[4/3] rounded-lg overflow-hidden" onclick="openPhotoViewer(this)" data-title="中粮集团论坛">
+              <img src="assets/training-photos/photo-14.png" alt="中粮集团论坛" class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500" loading="lazy">
+              <div class="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent opacity-0 group-hover:opacity-100 transition-all duration-300 flex items-end justify-center pb-3">
+                <span class="text-xs md:text-sm text-white font-medium text-center px-2 leading-tight drop-shadow-lg">中粮集团论坛</span>
+              </div>
+            </div>
+            <div class="photo-wall-item group cursor-pointer relative aspect-[4/3] rounded-lg overflow-hidden" onclick="openPhotoViewer(this)" data-title="国家电网授课">
+              <img src="assets/training-photos/photo-15.png" alt="国家电网授课" class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500" loading="lazy">
+              <div class="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent opacity-0 group-hover:opacity-100 transition-all duration-300 flex items-end justify-center pb-3">
+                <span class="text-xs md:text-sm text-white font-medium text-center px-2 leading-tight drop-shadow-lg">国家电网授课</span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- 全屏图片查看器 -->
+        <div id="photoViewer" class="fixed inset-0 z-[9999] bg-black/90 backdrop-blur-lg hidden items-center justify-center" onclick="closePhotoViewer(event)">
+          <button onclick="closePhotoViewer()" class="absolute top-4 right-4 w-10 h-10 rounded-full bg-white/10 text-white flex items-center justify-center hover:bg-white/20 transition-colors z-10">
+            <i data-lucide="x" class="w-6 h-6"></i>
+          </button>
+          <button onclick="prevPhoto(event)" class="absolute left-4 top-1/2 -translate-y-1/2 w-12 h-12 rounded-full bg-white/10 text-white flex items-center justify-center hover:bg-white/20 transition-colors z-10">
+            <i data-lucide="chevron-left" class="w-6 h-6"></i>
+          </button>
+          <button onclick="nextPhoto(event)" class="absolute right-4 top-1/2 -translate-y-1/2 w-12 h-12 rounded-full bg-white/10 text-white flex items-center justify-center hover:bg-white/20 transition-colors z-10">
+            <i data-lucide="chevron-right" class="w-6 h-6"></i>
+          </button>
+          <div class="max-w-5xl max-h-[85vh] px-16">
+            <img id="viewerImage" src="" alt="" class="max-w-full max-h-[75vh] object-contain rounded-lg mx-auto">
+            <p id="viewerTitle" class="text-center text-white/80 mt-4 text-lg"></p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ============================================ -->
+    <!--  ⑨ 文章专栏 — 最新文章                         -->
+    <!-- ============================================ -->
+    <section id="articles" class="py-20 md:py-28 relative">
+      <div class="max-w-7xl mx-auto px-4 md:px-6">
+        <div class="reveal text-center mb-12">
+          <div class="inline-flex items-center gap-2 mb-4">
+            <div class="w-8 h-[2px] bg-accent-cyan"></div>
+            <span class="text-sm font-semibold text-accent-cyan tracking-wider">ARTICLES</span>
+          </div>
+          <h2 class="text-3xl md:text-4xl font-bold text-on-surface">文章专栏</h2>
+          <p class="mt-4 text-on-surface-variant max-w-2xl mx-auto">分享数字化转型、AI营销、新零售等领域的实战经验与思考</p>
+        </div>
+
+        <div id="article-grid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+          
+        </div>
+
+        <div class="flex justify-center items-center gap-2 mt-12">
+          <button id="article-prev" class="w-10 h-10 rounded-lg bg-surface-container/60 flex items-center justify-center hover:bg-primary/20 hover:text-primary transition-colors disabled:opacity-50 disabled:cursor-not-allowed" disabled>
+            <i data-lucide="chevron-left" class="w-5 h-5"></i>
+          </button>
+          <button id="article-page-1" class="w-10 h-10 rounded-lg bg-primary flex items-center justify-center text-white font-medium">1</button>
+          <button id="article-page-2" class="w-10 h-10 rounded-lg bg-surface-container/60 flex items-center justify-center hover:bg-primary/20 hover:text-primary transition-colors">2</button>
+          <button id="article-page-3" class="w-10 h-10 rounded-lg bg-surface-container/60 flex items-center justify-center hover:bg-primary/20 hover:text-primary transition-colors">3</button>
+          <button id="article-page-4" class="w-10 h-10 rounded-lg bg-surface-container/60 flex items-center justify-center hover:bg-primary/20 hover:text-primary transition-colors">4</button>
+          <button id="article-page-5" class="w-10 h-10 rounded-lg bg-surface-container/60 flex items-center justify-center hover:bg-primary/20 hover:text-primary transition-colors">5</button>
+          <button id="article-next" class="w-10 h-10 rounded-lg bg-surface-container/60 flex items-center justify-center hover:bg-primary/20 hover:text-primary transition-colors">
+            <i data-lucide="chevron-right" class="w-5 h-5"></i>
+          </button>
+        </div>
+      </div>
+    </section>
+
+    <!-- ============================================ -->
+    <!--  ⑩ 联系我 — 行动召唤                          -->
+    <!-- ============================================ -->
+    <section id="contact" class="py-20 md:py-28 relative">
+      <div class="absolute inset-0 pointer-events-none">
+        <div class="absolute bottom-0 left-1/2 -translate-x-1/2 w-[800px] h-[300px] rounded-full bg-primary/5 blur-[120px]"></div>
+      </div>
+      <div class="relative max-w-7xl mx-auto px-4 md:px-6">
+        <div class="reveal text-center mb-14">
+          <div class="inline-flex items-center gap-2 mb-4">
+            <div class="w-8 h-[2px] bg-primary"></div>
+            <span class="text-sm font-semibold text-primary tracking-wider">CONTACT</span>
+            <div class="w-8 h-[2px] bg-primary"></div>
+          </div>
+          <h2 class="text-3xl md:text-4xl font-bold">开启<span class="gradient-text">合作</span></h2>
+          <p class="text-on-surface-variant mt-3 max-w-xl mx-auto">无论是企业培训、咨询项目还是总裁班授课，期待与您深度合作</p>
+        </div>
+
+        <div class="reveal max-w-4xl mx-auto">
+          <div class="glass-card rounded-2xl p-8 md:p-10 relative overflow-hidden">
+            <!-- 装饰光效 -->
+            <div class="absolute top-0 right-0 w-60 h-60 bg-primary/5 rounded-full blur-[80px] pointer-events-none"></div>
+            <div class="absolute bottom-0 left-0 w-40 h-40 bg-accent-gold/5 rounded-full blur-[60px] pointer-events-none"></div>
+
+            <div class="relative flex flex-col md:flex-row items-center gap-10">
+              <!-- 二维码 -->
+              <div class="flex-shrink-0 text-center">
+                <div class="w-48 h-48 bg-white rounded-2xl mx-auto flex items-center justify-center mb-3 shadow-card overflow-hidden">
+                  <img src="assets/qrcode.jpg" alt="微信二维码" class="w-full h-full object-cover">
+                </div>
+                <p class="text-xs text-on-surface-variant">扫码添加微信</p>
+              </div>
+
+              <!-- 联系信息 -->
+              <div class="flex-1 text-center md:text-left">
+                <h3 class="text-2xl font-bold mb-6">喻旭 · 青峰侠</h3>
+                <div class="space-y-4">
+                  <div class="flex items-center gap-3 justify-center md:justify-start">
+                    <div class="w-10 h-10 rounded-xl bg-primary/10 flex items-center justify-center flex-shrink-0">
+                      <i data-lucide="phone" class="w-5 h-5 text-primary"></i>
+                    </div>
+                    <div>
+                      <div class="text-xs text-on-surface-variant">电话咨询</div>
+                      <a href="tel:18902408809" class="text-lg font-bold text-accent-gold hover:text-primary transition-colors">189-0240-8809</a>
+                    </div>
+                  </div>
+                  <div class="flex items-center gap-3 justify-center md:justify-start">
+                    <div class="w-10 h-10 rounded-xl bg-accent-cyan/10 flex items-center justify-center flex-shrink-0">
+                      <i data-lucide="globe" class="w-5 h-5 text-accent-cyan"></i>
+                    </div>
+                    <div>
+                      <div class="text-xs text-on-surface-variant">个人网站</div>
+                      <a href="https://www.yuxu.net" class="text-sm font-semibold text-on-surface hover:text-primary transition-colors" target="_blank">www.yuxu.net</a>
+                    </div>
+                  </div>
+                  <div class="flex items-center gap-3 justify-center md:justify-start">
+                    <div class="w-10 h-10 rounded-xl bg-accent-gold/10 flex items-center justify-center flex-shrink-0">
+                      <i data-lucide="mail" class="w-5 h-5 text-accent-gold"></i>
+                    </div>
+                    <div>
+                      <div class="text-xs text-on-surface-variant">邮箱</div>
+                      <!-- 请后期补充：替换为真实邮箱 -->
+                      <span class="text-sm font-semibold text-on-surface">请后期补充邮箱</span>
+                    </div>
+                  </div>
+                </div>
+
+                <a href="tel:18902408809" class="inline-flex items-center gap-2 mt-8 bg-primary text-on-primary px-8 py-3 rounded-xl text-sm font-semibold hover:opacity-90 transition-all shadow-[0_0_25px_rgba(20,184,166,0.35)]" style="animation: pulse-glow 3s ease-in-out infinite;">
+                  <i data-lucide="phone-call" class="w-4 h-4"></i>
+                  立即拨打电话
+                </a>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ============================================ -->
+    <!--  页脚                                         -->
+    <!-- ============================================ -->
+    <footer class="py-8 border-t border-outline-variant/20">
+      <div class="max-w-7xl mx-auto px-4 md:px-6 flex flex-col md:flex-row items-center justify-between gap-4">
+        <div class="flex items-center gap-2">
+          <div class="w-6 h-6 rounded-md bg-gradient-to-br from-primary to-accent-cyan flex items-center justify-center">
+            <i data-lucide="zap" class="w-3 h-3 text-white"></i>
+          </div>
+          <span class="text-sm font-semibold">喻旭 · 青峰侠</span>
+        </div>
+        <p class="text-xs text-on-surface-variant">数智化商业顾问 · 让每一家企业都拥有数智增长的力量</p>
+        <p class="text-xs text-on-surface-variant/50">Copyright 2026 All Rights Reserved</p>
+      </div>
+    </footer>
+
+  </main>
+  <!-- @main-content:end -->
+
+  <script>
+    // === Lucide Icons 初始化 ===
+    lucide.createIcons();
+
+    // === 二维码弹窗 ===
+    const qrToggle = document.getElementById('qr-toggle');
+    const qrPopup = document.getElementById('qr-popup');
+    qrToggle.addEventListener('click', function(e) {
+      e.stopPropagation();
+      qrPopup.classList.toggle('show');
+    });
+
+    // 侧边二维码弹窗
+    const floatQrBtn = document.getElementById('float-qr-btn');
+    const floatQrPopup = document.getElementById('float-qr-popup');
+    floatQrBtn.addEventListener('click', function(e) {
+      e.stopPropagation();
+      floatQrPopup.classList.toggle('show');
+      if (floatQrPopup.classList.contains('show')) {
+        floatQrPopup.style.opacity = '1';
+        floatQrPopup.style.pointerEvents = 'auto';
+        floatQrPopup.style.transform = 'translateY(-50%) translateX(0)';
+      } else {
+        floatQrPopup.style.opacity = '0';
+        floatQrPopup.style.pointerEvents = 'none';
+        floatQrPopup.style.transform = 'translateY(-50%) translateX(8px)';
+      }
+    });
+
+    document.addEventListener('click', function() {
+      qrPopup.classList.remove('show');
+      floatQrPopup.style.opacity = '0';
+      floatQrPopup.style.pointerEvents = 'none';
+      floatQrPopup.style.transform = 'translateY(-50%) translateX(8px)';
+    });
+
+    // === 侧边悬浮CTA 显示/隐藏 ===
+    const floatingCta = document.getElementById('floating-cta');
+    window.addEventListener('scroll', function() {
+      if (window.scrollY > window.innerHeight * 0.6) {
+        floatingCta.classList.add('show');
+      } else {
+        floatingCta.classList.remove('show');
+      }
+    });
+
+    // === 视频播放控制 ===
+    const video = document.getElementById('intro-video');
+    const videoOverlay = document.getElementById('video-overlay');
+    
+    function setVideoFirstFrameAsPoster() {
+      if (!video) return;
+      video.addEventListener('loadedmetadata', function() {
+        video.currentTime = 0.1;
+        const canvas = document.createElement('canvas');
+        canvas.width = video.videoWidth;
+        canvas.height = video.videoHeight;
+        const ctx = canvas.getContext('2d');
+        ctx.drawImage(video, 0, 0, canvas.width, canvas.height);
+        const posterUrl = canvas.toDataURL('image/jpeg');
+        video.poster = posterUrl;
+      });
+    }
+    
+    setVideoFirstFrameAsPoster();
+    
+    if (videoOverlay && video) {
+      videoOverlay.addEventListener('click', function() {
+        video.muted = false;
+        video.play();
+        videoOverlay.style.opacity = '0';
+        videoOverlay.style.pointerEvents = 'none';
+      });
+      video.addEventListener('click', function() {
+        if (video.paused) {
+          video.play();
+        } else {
+          video.pause();
+        }
+      });
+    }
+
+    // === 滚动触发动画 ===
+    const revealElements = document.querySelectorAll('.reveal');
+    const observer = new IntersectionObserver(function(entries) {
+      entries.forEach(function(entry) {
+        if (entry.isIntersecting) {
+          entry.target.classList.add('visible');
+        }
+      });
+    }, { threshold: 0.1, rootMargin: '0px 0px -50px 0px' });
+    revealElements.forEach(function(el) { observer.observe(el); });
+
+    // === 数字计数动画 ===
+    const counters = document.querySelectorAll('.counter');
+    const counterObserver = new IntersectionObserver(function(entries) {
+      entries.forEach(function(entry) {
+        if (entry.isIntersecting) {
+          const el = entry.target;
+          const target = parseInt(el.dataset.target);
+          const duration = 2000;
+          const startTime = performance.now();
+          function update(currentTime) {
+            const elapsed = currentTime - startTime;
+            const progress = Math.min(elapsed / duration, 1);
+            const eased = 1 - Math.pow(1 - progress, 3);
+            el.textContent = Math.round(target * eased);
+            if (progress < 1) {
+              requestAnimationFrame(update);
+            } else {
+              el.textContent = target;
+            }
+          }
+          requestAnimationFrame(update);
+          counterObserver.unobserve(el);
+        }
+      });
+    }, { threshold: 0.5 });
+    counters.forEach(function(c) { counterObserver.observe(c); });
+
+    // === 课程Tab切换 ===
+    const courseTabs = document.querySelectorAll('.course-tab');
+    courseTabs.forEach(function(tab) {
+      tab.addEventListener('click', function() {
+        courseTabs.forEach(function(t) { t.classList.remove('active'); });
+        tab.classList.add('active');
+        const tabName = tab.dataset.tab;
+        document.querySelectorAll('.course-panel').forEach(function(p) { p.classList.add('hidden'); });
+        document.getElementById('tab-' + tabName).classList.remove('hidden');
+        // 重新初始化图标
+        lucide.createIcons();
+      });
+    });
+
+    // Tab样式
+    function updateTabStyles() {
+      courseTabs.forEach(function(tab) {
+        if (tab.classList.contains('active')) {
+          tab.style.background = 'rgba(20,184,166,0.15)';
+          tab.style.color = '#14B8A6';
+          tab.style.border = '1px solid rgba(20,184,166,0.3)';
+        } else {
+          tab.style.background = 'rgba(30,41,59,0.6)';
+          tab.style.color = '#94A3B8';
+          tab.style.border = '1px solid transparent';
+        }
+      });
+    }
+    updateTabStyles();
+    courseTabs.forEach(function(t) { t.addEventListener('click', updateTabStyles); });
+
+    // === 课程大纲展开/收起 ===
+    document.querySelectorAll('.outline-toggle').forEach(function(btn) {
+      btn.addEventListener('click', function() {
+        const outline = btn.closest('.glass-card').querySelector('.course-outline');
+        const icon = btn.querySelector('[data-lucide]');
+        outline.classList.toggle('expanded');
+        if (outline.classList.contains('expanded')) {
+          icon.style.transform = 'rotate(180deg)';
+          btn.childNodes[btn.childNodes.length - 1].textContent = '收起大纲';
+        } else {
+          icon.style.transform = 'rotate(0deg)';
+          btn.childNodes[btn.childNodes.length - 1].textContent = '查看大纲';
+        }
+      });
+    });
+
+    // === 客户卡片Hover交互 ===
+    document.querySelectorAll('.client-card').forEach(function(card) {
+      // 动态创建tooltip元素
+      var service = card.getAttribute('data-service') || '';
+      var type = card.getAttribute('data-type') || 'lecture';
+      var desc = card.getAttribute('data-desc') || '';
+      var name = card.textContent.trim();
+
+      var tooltip = document.createElement('div');
+      tooltip.className = 'client-tooltip';
+
+      var tagClass = type;
+      var tagLabel = service;
+      tooltip.innerHTML =
+        '<div class="service-tag ' + tagClass + '">' +
+          '<span class="tag-dot"></span>' + tagLabel +
+        '</div>' +
+        '<div class="service-desc">' + desc + '</div>';
+
+      card.style.position = 'relative';
+      card.appendChild(tooltip);
+    });
+
+    // === 导航高亮 ===
+    const navLinks = document.querySelectorAll('header nav a');
+    const sections = document.querySelectorAll('section[id]');
+    window.addEventListener('scroll', function() {
+      let current = '';
+      sections.forEach(function(section) {
+        const sectionTop = section.offsetTop - 100;
+        if (window.scrollY >= sectionTop) {
+          current = section.getAttribute('id');
+        }
+      });
+      navLinks.forEach(function(link) {
+        link.classList.remove('text-primary', 'bg-primary/10');
+        if (link.getAttribute('href') === '#' + current) {
+          link.classList.add('text-primary', 'bg-primary/10');
+        }
+      });
+    });
+
+    // === 照片墙全屏查看器 ===
+    let currentPhotoIndex = 0;
+    const photoItems = document.querySelectorAll('.photo-wall-item');
+    
+    function openPhotoViewer(el) {
+      const viewer = document.getElementById('photoViewer');
+      const img = document.getElementById('viewerImage');
+      const title = document.getElementById('viewerTitle');
+      
+      // 找到当前索引
+      photoItems.forEach((item, i) => {
+        if (item === el) currentPhotoIndex = i;
+      });
+      
+      showPhoto(currentPhotoIndex);
+      viewer.classList.add('active');
+      document.body.style.overflow = 'hidden';
+    }
+    
+    function showPhoto(index) {
+      const item = photoItems[index];
+      if (!item) return;
+      const img = item.querySelector('img');
+      const title = item.dataset.title || '';
+      
+      document.getElementById('viewerImage').src = img.src;
+      document.getElementById('viewerImage').alt = title;
+      document.getElementById('viewerTitle').textContent = title;
+    }
+    
+    function closePhotoViewer(e) {
+      if (e && e.target !== e.currentTarget && !e.target.closest('button')) return;
+      const viewer = document.getElementById('photoViewer');
+      viewer.classList.remove('active');
+      document.body.style.overflow = '';
+    }
+    
+    function prevPhoto(e) {
+      e.stopPropagation();
+      currentPhotoIndex = (currentPhotoIndex - 1 + photoItems.length) % photoItems.length;
+      showPhoto(currentPhotoIndex);
+    }
+    
+    function nextPhoto(e) {
+      e.stopPropagation();
+      currentPhotoIndex = (currentPhotoIndex + 1) % photoItems.length;
+      showPhoto(currentPhotoIndex);
+    }
+    
+    // 键盘支持
+    document.addEventListener('keydown', (e) => {
+      const viewer = document.getElementById('photoViewer');
+      if (!viewer.classList.contains('active')) return;
+      if (e.key === 'Escape') closePhotoViewer();
+      if (e.key === 'ArrowLeft') prevPhoto(e);
+      if (e.key === 'ArrowRight') nextPhoto(e);
+    });
+
+    // 文章分页功能（动态加载）
+    const articlePageSize = 6;
+    const totalArticlePages = Math.ceil(latestArticles.length / articlePageSize);
+    let currentArticlePage = 1;
+
+    function renderPage(page) {
+      currentArticlePage = page;
+      renderArticleCards(latestArticles, 'article-grid', page, articlePageSize);
+      updatePagination(totalArticlePages, page, 'article-prev', 'article-next', 'article-page-');
+    }
+
+    renderPage(1);
+
+    document.getElementById('article-prev')?.addEventListener('click', () => {
+      if (currentArticlePage > 1) {
+        renderPage(currentArticlePage - 1);
+      }
+    });
+
+    document.getElementById('article-next')?.addEventListener('click', () => {
+      if (currentArticlePage < totalArticlePages) {
+        renderPage(currentArticlePage + 1);
+      }
+    });
+
+    for (let i = 1; i <= totalArticlePages; i++) {
+      document.getElementById(`article-page-${i}`)?.addEventListener('click', () => {
+        renderPage(i);
+      });
+    }
+
+  </script>
+
+</body>
+</html>

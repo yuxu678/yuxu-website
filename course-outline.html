@@ -1,0 +1,877 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>AI营销课程大纲 | 喻旭·青峰侠</title>
+  <link href="https://lf-code-agent.coze.cn/obj/x-ai-cn/fonts/google/google-all-fonts.css" rel="stylesheet"/>
+  <script src="https://lf-code-agent.coze.cn/obj/x-ai-cn/cdn/jquery/jquery-3.7.1.min.js"></script>
+  <script src="https://lf-code-agent.coze.cn/obj/x-ai-cn/cdn/lucide/lucide-1.11.0.min.js"></script>
+  <script src="https://lf-code-agent.coze.cn/obj/x-ai-cn/cdn/tailwindcss/tailwindcss-browser-4.2.4.min.js"></script>
+  <style type="text/tailwindcss">
+    @theme {
+      --color-primary:              #14B8A6;
+      --color-primary-container:    #0D9488;
+      --color-on-primary:           #ffffff;
+      --color-accent-gold:          #C9A84C;
+      --color-accent-cyan:          #06B6D4;
+      --color-background:           #050816;
+      --color-surface-container-lowest: #0A0F1E;
+      --color-surface:              #0F172A;
+      --color-surface-container:    #1E293B;
+      --color-surface-container-high: #273549;
+      --color-surface-container-highest: #334155;
+      --color-on-surface:           #F1F5F9;
+      --color-on-surface-variant:   #94A3B8;
+      --color-success:              #22c55e;
+      --color-error:                #ef4444;
+      --color-warning:              #f59e0b;
+      --color-outline:              #334155;
+      --color-outline-variant:      #1E293B;
+      --radius-sm:   0.375rem;
+      --radius-md:   0.5rem;
+      --radius-lg:   0.75rem;
+      --radius-xl:   1rem;
+      --radius-2xl:  1.5rem;
+      --radius-full: 9999px;
+      --shadow-card:   0 2px 12px rgba(0,0,0,0.4);
+      --shadow-float:  0 10px 30px rgba(0,0,0,0.5);
+      --font-sans: "Space Grotesk", "Noto Sans SC", system-ui, sans-serif;
+    }
+  </style>
+  <style>
+    @keyframes float-back-pulse {
+      0%, 100% { 
+        opacity: 0.7; 
+        box-shadow: 0 0 15px rgba(20, 184, 166, 0.4), 0 0 30px rgba(6, 182, 212, 0.2);
+        transform: translateY(0) scale(1);
+      }
+      50% { 
+        opacity: 1; 
+        box-shadow: 0 0 35px rgba(20, 184, 166, 0.7), 0 0 60px rgba(6, 182, 212, 0.4), 0 0 90px rgba(20, 184, 166, 0.2);
+        transform: translateY(-4px) scale(1.02);
+      }
+    }
+    .float-back-glow {
+      animation: float-back-pulse 2s ease-in-out infinite;
+    }
+    html { scroll-behavior: smooth; }
+    ::-webkit-scrollbar { width: 6px; }
+    ::-webkit-scrollbar-track { background: var(--color-background); }
+    ::-webkit-scrollbar-thumb { background: var(--color-surface-container-high); border-radius: 3px; }
+    .glass-card {
+      background: rgba(15, 23, 42, 0.6);
+      backdrop-filter: blur(20px);
+      border: 1px solid rgba(148, 163, 184, 0.08);
+    }
+    .glass-sidebar {
+      background: rgba(15, 23, 42, 0.8);
+      backdrop-filter: blur(24px);
+      border-right: 1px solid rgba(148, 163, 184, 0.08);
+    }
+    .gradient-text {
+      background: linear-gradient(135deg, #14B8A6, #06B6D4, #C9A84C);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+    .section-divider {
+      height: 1px;
+      background: linear-gradient(to right, transparent, rgba(20,184,166,0.2), transparent);
+    }
+    .chapter-header {
+      transition: all 0.3s ease;
+    }
+    .chapter-header:hover {
+      background-color: rgba(20, 184, 166, 0.1);
+    }
+    .section-content {
+      max-height: 0;
+      overflow: hidden;
+      transition: max-height 0.5s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+    .section-content.expanded {
+      max-height: 5000px;
+    }
+    .image-modal {
+      display: none;
+      position: fixed;
+      inset: 0;
+      background: rgba(0,0,0,0.9);
+      z-index: 1000;
+      align-items: center;
+      justify-content: center;
+    }
+    .image-modal.active {
+      display: flex;
+    }
+    .reveal {
+      opacity: 0;
+      transform: translateY(20px);
+      transition: all 0.6s ease-out;
+    }
+    .reveal.visible {
+      opacity: 1;
+      transform: translateY(0);
+    }
+    .nav-item.active {
+      color: #14B8A6;
+      background-color: rgba(20, 184, 166, 0.1);
+      border-left: 2px solid #14B8A6;
+    }
+    .nav-item:hover {
+      background-color: rgba(148, 163, 184, 0.1);
+    }
+    .toc-toggle {
+      display: none;
+    }
+    @media (max-width: 1024px) {
+      .float-back-btn {
+        left: 2px;
+      }
+      .toc-sidebar {
+        display: none;
+      }
+      .toc-toggle {
+        display: block;
+      }
+      .toc-sidebar.mobile-active {
+        display: block;
+        position: fixed;
+        inset-y: 0;
+        left: 0;
+        z-index: 60;
+        width: 280px;
+      }
+      .overlay {
+        display: none;
+        position: fixed;
+        inset: 0;
+        background: rgba(0,0,0,0.6);
+        z-index: 50;
+      }
+      .overlay.active {
+        display: block;
+      }
+    }
+  </style>
+</head>
+<body class="bg-background text-on-surface font-sans">
+  <header class="fixed top-0 left-0 right-0 z-50 bg-background/80 backdrop-blur-xl border-b border-outline-variant/30">
+    <div class="max-w-7xl mx-auto px-4 md:px-6 h-14 flex items-center justify-between">
+      <div class="flex items-center gap-4">
+        <button class="toc-toggle p-2 rounded-lg hover:bg-surface-container transition-colors" onclick="toggleMobileToc()">
+          <i data-lucide="list" class="w-5 h-5"></i>
+        </button>
+        <a href="index.html" class="flex items-center gap-2">
+          <div class="w-8 h-8 rounded-lg bg-gradient-to-br from-primary to-accent-cyan flex items-center justify-center">
+            <i data-lucide="zap" class="w-4 h-4 text-white"></i>
+          </div>
+          <span class="font-bold text-sm">喻旭 · 青峰侠</span>
+        </a>
+      </div>
+      <nav class="flex items-center gap-4">
+        <a href="index.html#courses" class="text-sm text-on-surface-variant hover:text-primary transition-colors">课程体系</a>
+        <a href="index.html#about" class="text-sm text-on-surface-variant hover:text-primary transition-colors">关于我</a>
+        <a href="index.html#contact" class="text-sm text-on-surface-variant hover:text-primary transition-colors">联系我</a>
+      </nav>
+    </div>
+  </header>
+
+  <div class="overlay" id="overlay" onclick="toggleMobileToc()"></div>
+
+  <a href="index.html#courses" class="float-back-btn fixed left-0 w-64 bottom-8 z-40 group flex justify-center">
+    <div class="flex flex-col items-center gap-1 px-2 py-1.5 rounded-lg bg-gradient-to-br from-primary/20 to-accent-cyan/10 backdrop-blur-md border border-primary/30 opacity-70 hover:opacity-100 hover:scale-105 transition-all duration-300 float-back-glow">
+      <i data-lucide="home" class="w-4 h-4 text-primary group-hover:text-white transition-colors"></i>
+      <span class="text-[10px] text-primary/90 font-medium whitespace-nowrap">返回</span>
+    </div>
+  </a>
+
+  <aside class="toc-sidebar fixed left-0 top-14 bottom-0 w-64 glass-sidebar overflow-y-auto">
+    <div class="p-4">
+      <h3 class="text-xs font-semibold text-primary tracking-wider mb-4 flex items-center gap-2">
+        <i data-lucide="book-open" class="w-4 h-4"></i>
+        课程目录
+      </h3>
+      <nav class="space-y-1">
+        <a href="#chapter-1" class="nav-item block px-3 py-2 rounded-lg text-sm text-on-surface-variant transition-all" onclick="toggleMobileToc()">
+          <span class="text-primary/60 mr-2">01</span>AI营销概述与价值
+        </a>
+        <a href="#chapter-2" class="nav-item block px-3 py-2 rounded-lg text-sm text-on-surface-variant transition-all" onclick="toggleMobileToc()">
+          <span class="text-accent-gold/60 mr-2">02</span>AI营销范式演进与实战案例
+        </a>
+        <a href="#chapter-3" class="nav-item block px-3 py-2 rounded-lg text-sm text-on-surface-variant transition-all" onclick="toggleMobileToc()">
+          <span class="text-accent-cyan/60 mr-2">03</span>提示词工程与AI工具应用
+        </a>
+        <a href="#chapter-4" class="nav-item block px-3 py-2 rounded-lg text-sm text-on-surface-variant transition-all" onclick="toggleMobileToc()">
+          <span class="text-primary/60 mr-2">04</span>AI Agent智能体开发实战
+        </a>
+        <a href="#chapter-5" class="nav-item block px-3 py-2 rounded-lg text-sm text-on-surface-variant transition-all" onclick="toggleMobileToc()">
+          <span class="text-accent-gold/60 mr-2">05</span>AI化组织变革与实施
+        </a>
+        <a href="#chapter-6" class="nav-item block px-3 py-2 rounded-lg text-sm text-on-surface-variant transition-all" onclick="toggleMobileToc()">
+          <span class="text-accent-cyan/60 mr-2">06</span>课程总结与实践建议
+        </a>
+      </nav>
+    </div>
+  </aside>
+
+  <main class="pt-14 pl-64">
+    <section class="py-12 md:py-16 relative">
+      <div class="absolute inset-0 pointer-events-none">
+        <div class="absolute top-1/3 left-1/4 w-[500px] h-[300px] rounded-full bg-primary/5 blur-[120px]"></div>
+        <div class="absolute bottom-1/4 right-1/4 w-[400px] h-[200px] rounded-full bg-accent-gold/5 blur-[100px]"></div>
+      </div>
+      <div class="relative max-w-4xl mx-auto px-4 md:px-6 text-center">
+        <div class="inline-flex items-center gap-2 mb-4">
+          <div class="w-6 h-[2px] bg-primary"></div>
+          <span class="text-xs font-semibold text-primary tracking-wider">COURSE OUTLINE</span>
+          <div class="w-6 h-[2px] bg-primary"></div>
+        </div>
+        <h1 class="text-3xl md:text-4xl font-bold mb-4">
+          <span class="gradient-text">AI营销</span>课程大纲
+        </h1>
+        <p class="text-on-surface-variant text-sm md:text-base max-w-2xl mx-auto">
+          从AI营销概述到智能体开发实战，系统掌握AI驱动的营销增长方法论
+        </p>
+      </div>
+    </section>
+
+    <div class="section-divider max-w-3xl mx-auto"></div>
+
+    <section class="py-12 md:py-16">
+      <div class="max-w-4xl mx-auto px-4 md:px-6">
+        <div class="space-y-4">
+          <div id="chapter-1" class="chapter-card glass-card rounded-xl overflow-hidden reveal" style="animation-delay: 0.1s;">
+            <div class="chapter-header cursor-pointer px-5 py-4 flex items-center gap-3" onclick="toggleSection('chapter-1')">
+              <div class="w-8 h-8 rounded-lg bg-primary/10 flex items-center justify-center flex-shrink-0">
+                <span class="text-primary font-bold text-sm">01</span>
+              </div>
+              <div class="flex-1 text-left">
+                <h2 class="font-bold text-base">第一章 AI营销概述与价值</h2>
+              </div>
+              <i data-lucide="chevron-down" class="w-5 h-5 text-on-surface-variant transition-transform flex-shrink-0" id="icon-1"></i>
+            </div>
+            <div id="content-1" class="section-content border-t border-outline-variant/20">
+              <div class="px-5 py-4 space-y-3">
+                <div class="pl-11">
+                  <div class="subsection-header cursor-pointer flex items-center gap-2 py-2" onclick="toggleSubsection('sec-1-1')">
+                    <span class="text-xs font-semibold text-primary">第一节</span>
+                    <span class="text-sm">AI营销的定义与时代背景</span>
+                    <i data-lucide="chevron-right" class="w-4 h-4 text-on-surface-variant ml-auto transition-transform" id="subicon-1-1"></i>
+                  </div>
+                  <div id="sec-1-1" class="subsection-content hidden pl-2 pt-2 space-y-2">
+                    <div class="text-sm text-on-surface-variant">一、营销发展的五个阶段</div>
+                    <div class="image-container cursor-pointer p-2 rounded-lg bg-surface-container/50 hover:bg-surface-container transition-colors" onclick="openImageModal('Course Outline/assets/images/营销发展五个阶段.png', '营销发展的五个阶段')">
+                      <img src="Course Outline/assets/images/营销发展五个阶段.png" alt="营销发展五个阶段" class="w-full rounded-lg max-h-64 object-contain">
+                    </div>
+                    <div class="text-sm text-on-surface-variant">二、商业模式更新周期</div>
+                    <div class="text-sm text-on-surface-variant">三、AI营销的定义与核心能力</div>
+                    <div class="image-container cursor-pointer p-2 rounded-lg bg-surface-container/50 hover:bg-surface-container transition-colors" onclick="openImageModal('Course Outline/assets/images/AI营销定义与核心能力.png', 'AI营销的定义与核心能力')">
+                      <img src="Course Outline/assets/images/AI营销定义与核心能力.png" alt="AI营销定义与核心能力" class="w-full rounded-lg max-h-64 object-contain">
+                    </div>
+                  </div>
+                </div>
+                <div class="pl-11">
+                  <div class="subsection-header cursor-pointer flex items-center gap-2 py-2" onclick="toggleSubsection('sec-1-2')">
+                    <span class="text-xs font-semibold text-accent-gold">第二节</span>
+                    <span class="text-sm">AI营销的三大核心价值</span>
+                    <i data-lucide="chevron-right" class="w-4 h-4 text-on-surface-variant ml-auto transition-transform" id="subicon-1-2"></i>
+                  </div>
+                  <div id="sec-1-2" class="subsection-content hidden pl-2 pt-2 space-y-2">
+                    <div class="text-sm text-on-surface-variant">一、增长方式重构</div>
+                    <div class="text-sm text-on-surface-variant">二、体验与关系升级</div>
+                    <div class="text-sm text-on-surface-variant">三、增收降本提效</div>
+                  </div>
+                </div>
+                <div class="pl-11">
+                  <div class="subsection-header cursor-pointer flex items-center gap-2 py-2" onclick="toggleSubsection('sec-1-3')">
+                    <span class="text-xs font-semibold text-accent-cyan">第三节</span>
+                    <span class="text-sm">AI营销的实现框架</span>
+                    <i data-lucide="chevron-right" class="w-4 h-4 text-on-surface-variant ml-auto transition-transform" id="subicon-1-3"></i>
+                  </div>
+                  <div id="sec-1-3" class="subsection-content hidden pl-2 pt-2 space-y-2">
+                    <div class="image-container cursor-pointer p-2 rounded-lg bg-surface-container/50 hover:bg-surface-container transition-colors" onclick="openImageModal('Course Outline/assets/images/AI营销价值与实现框架.png', 'AI营销价值与实现框架')">
+                      <img src="Course Outline/assets/images/AI营销价值与实现框架.png" alt="AI营销价值与实现框架" class="w-full rounded-lg max-h-64 object-contain">
+                    </div>
+                    <div class="text-sm text-on-surface-variant">一、价值层：三大核心价值</div>
+                    <div class="text-sm text-on-surface-variant">二、业务层：自进化营销飞轮</div>
+                    <div class="text-sm text-on-surface-variant">三、运营层：多智能体编排</div>
+                    <div class="text-sm text-on-surface-variant">四、技术层：AI智能底座</div>
+                    <div class="text-sm text-on-surface-variant">五、组织层：人机增强型组织</div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div id="chapter-2" class="chapter-card glass-card rounded-xl overflow-hidden reveal" style="animation-delay: 0.2s;">
+            <div class="chapter-header cursor-pointer px-5 py-4 flex items-center gap-3" onclick="toggleSection('chapter-2')">
+              <div class="w-8 h-8 rounded-lg bg-accent-gold/10 flex items-center justify-center flex-shrink-0">
+                <span class="text-accent-gold font-bold text-sm">02</span>
+              </div>
+              <div class="flex-1 text-left">
+                <h2 class="font-bold text-base">第二章 AI营销范式演进与实战案例</h2>
+              </div>
+              <i data-lucide="chevron-down" class="w-5 h-5 text-on-surface-variant transition-transform flex-shrink-0" id="icon-2"></i>
+            </div>
+            <div id="content-2" class="section-content border-t border-outline-variant/20">
+              <div class="px-5 py-4 space-y-3">
+                <div class="pl-11">
+                  <div class="subsection-header cursor-pointer flex items-center gap-2 py-2" onclick="toggleSubsection('sec-2-1')">
+                    <span class="text-xs font-semibold text-primary">第一节</span>
+                    <span class="text-sm">Level 1：流量漏斗系统（投放驱动）</span>
+                    <i data-lucide="chevron-right" class="w-4 h-4 text-on-surface-variant ml-auto transition-transform" id="subicon-2-1"></i>
+                  </div>
+                  <div id="sec-2-1" class="subsection-content hidden pl-2 pt-2 space-y-2">
+                    <div class="image-container cursor-pointer p-2 rounded-lg bg-surface-container/50 hover:bg-surface-container transition-colors" onclick="openImageModal('Course Outline/assets/images/Level1流量漏斗系统.png', 'Level1流量漏斗系统')">
+                      <img src="Course Outline/assets/images/Level1流量漏斗系统.png" alt="Level1流量漏斗系统" class="w-full rounded-lg max-h-64 object-contain">
+                    </div>
+                    <div class="text-sm text-on-surface-variant">一、流量漏斗系统的特征</div>
+                    <div class="text-sm text-on-surface-variant">二、核心问题："钱停=增长停"</div>
+                    <div class="text-sm text-on-surface-variant">三、边际成本递增规律</div>
+                  </div>
+                </div>
+                <div class="pl-11">
+                  <div class="subsection-header cursor-pointer flex items-center gap-2 py-2" onclick="toggleSubsection('sec-2-2')">
+                    <span class="text-xs font-semibold text-accent-gold">第二节</span>
+                    <span class="text-sm">Level 2：内容飞轮系统（内容驱动）</span>
+                    <i data-lucide="chevron-right" class="w-4 h-4 text-on-surface-variant ml-auto transition-transform" id="subicon-2-2"></i>
+                  </div>
+                  <div id="sec-2-2" class="subsection-content hidden pl-2 pt-2 space-y-2">
+                    <div class="image-container cursor-pointer p-2 rounded-lg bg-surface-container/50 hover:bg-surface-container transition-colors" onclick="openImageModal('Course Outline/assets/images/Level2内容飞轮系统.png', 'Level2内容飞轮系统')">
+                      <img src="Course Outline/assets/images/Level2内容飞轮系统.png" alt="Level2内容飞轮系统" class="w-full rounded-lg max-h-64 object-contain">
+                    </div>
+                    <div class="text-sm text-on-surface-variant">一、从"买流量"到"生成流量"</div>
+                    <div class="text-sm text-on-surface-variant">二、内容规模化生产（AI）</div>
+                    <div class="text-sm text-on-surface-variant">三、流量来自算法分发</div>
+                    <div class="text-sm text-on-surface-variant">四、案例：短视频+直播矩阵</div>
+                  </div>
+                </div>
+                <div class="pl-11">
+                  <div class="subsection-header cursor-pointer flex items-center gap-2 py-2" onclick="toggleSubsection('sec-2-3')">
+                    <span class="text-xs font-semibold text-accent-cyan">第三节</span>
+                    <span class="text-sm">Level 3：AI Agent系统（自主增长型）</span>
+                    <i data-lucide="chevron-right" class="w-4 h-4 text-on-surface-variant ml-auto transition-transform" id="subicon-2-3"></i>
+                  </div>
+                  <div id="sec-2-3" class="subsection-content hidden pl-2 pt-2 space-y-2">
+                    <div class="image-container cursor-pointer p-2 rounded-lg bg-surface-container/50 hover:bg-surface-container transition-colors" onclick="openImageModal('Course Outline/assets/images/Level3_Agent系统.png', 'Level3_Agent系统')">
+                      <img src="Course Outline/assets/images/Level3_Agent系统.png" alt="Level3_Agent系统" class="w-full rounded-lg max-h-64 object-contain">
+                    </div>
+                    <div class="text-sm text-on-surface-variant">一、自主思考与决策</div>
+                    <div class="text-sm text-on-surface-variant">二、自主执行与全自动</div>
+                    <div class="text-sm text-on-surface-variant">三、自主进化能力</div>
+                    <div class="text-sm text-on-surface-variant">四、案例：平安保险7万智能体运转</div>
+                    <div class="image-container cursor-pointer p-2 rounded-lg bg-surface-container/50 hover:bg-surface-container transition-colors" onclick="openImageModal('Course Outline/assets/images/平安7万智能体运转.png', '平安7万智能体运转')">
+                      <img src="Course Outline/assets/images/平安7万智能体运转.png" alt="平安7万智能体运转" class="w-full rounded-lg max-h-64 object-contain">
+                    </div>
+                  </div>
+                </div>
+                <div class="pl-11">
+                  <div class="subsection-header cursor-pointer flex items-center gap-2 py-2" onclick="toggleSubsection('sec-2-4')">
+                    <span class="text-xs font-semibold text-primary">第四节</span>
+                    <span class="text-sm">三大发展阶段与红线</span>
+                    <i data-lucide="chevron-right" class="w-4 h-4 text-on-surface-variant ml-auto transition-transform" id="subicon-2-4"></i>
+                  </div>
+                  <div id="sec-2-4" class="subsection-content hidden pl-2 pt-2 space-y-2">
+                    <div class="text-sm text-on-surface-variant">一、阶段1：速赢切入</div>
+                    <div class="text-sm text-on-surface-variant">二、阶段2：双Agent协同</div>
+                    <div class="text-sm text-on-surface-variant">三、阶段3：全链路自主运转</div>
+                    <div class="text-sm text-on-surface-variant">四、合规红线、风控红线、数据红线</div>
+                  </div>
+                </div>
+                <div class="pl-11">
+                  <div class="subsection-header cursor-pointer flex items-center gap-2 py-2" onclick="toggleSubsection('sec-2-5')">
+                    <span class="text-xs font-semibold text-accent-gold">第五节</span>
+                    <span class="text-sm">AI营销实战案例</span>
+                    <i data-lucide="chevron-right" class="w-4 h-4 text-on-surface-variant ml-auto transition-transform" id="subicon-2-5"></i>
+                  </div>
+                  <div id="sec-2-5" class="subsection-content hidden pl-2 pt-2 space-y-2">
+                    <div class="text-sm text-on-surface-variant">一、比亚迪案例：AI+心智重塑</div>
+                    <div class="text-sm text-on-surface-variant">二、平安保险案例：7万智能体运转</div>
+                    <div class="text-sm text-on-surface-variant">三、B2B销售场景蓝图</div>
+                    <div class="image-container cursor-pointer p-2 rounded-lg bg-surface-container/50 hover:bg-surface-container transition-colors" onclick="openImageModal('Course Outline/assets/images/B2B销售场景蓝图.png', 'B2B销售场景蓝图')">
+                      <img src="Course Outline/assets/images/B2B销售场景蓝图.png" alt="B2B销售场景蓝图" class="w-full rounded-lg max-h-64 object-contain">
+                    </div>
+                  </div>
+                </div>
+                <div class="pl-11">
+                  <div class="subsection-header cursor-pointer flex items-center gap-2 py-2" onclick="toggleSubsection('sec-2-6')">
+                    <span class="text-xs font-semibold text-accent-cyan">第六节</span>
+                    <span class="text-sm">GEO（生成式引擎优化）</span>
+                    <i data-lucide="chevron-right" class="w-4 h-4 text-on-surface-variant ml-auto transition-transform" id="subicon-2-6"></i>
+                  </div>
+                  <div id="sec-2-6" class="subsection-content hidden pl-2 pt-2 space-y-2">
+                    <div class="text-sm text-on-surface-variant">一、GEO的定义与价值</div>
+                    <div class="text-sm text-on-surface-variant">二、GEO内容生产策略</div>
+                    <div class="text-sm text-on-surface-variant">三、GEO发布渠道选择</div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div id="chapter-3" class="chapter-card glass-card rounded-xl overflow-hidden reveal" style="animation-delay: 0.3s;">
+            <div class="chapter-header cursor-pointer px-5 py-4 flex items-center gap-3" onclick="toggleSection('chapter-3')">
+              <div class="w-8 h-8 rounded-lg bg-accent-cyan/10 flex items-center justify-center flex-shrink-0">
+                <span class="text-accent-cyan font-bold text-sm">03</span>
+              </div>
+              <div class="flex-1 text-left">
+                <h2 class="font-bold text-base">第三章 提示词工程与AI工具应用</h2>
+              </div>
+              <i data-lucide="chevron-down" class="w-5 h-5 text-on-surface-variant transition-transform flex-shrink-0" id="icon-3"></i>
+            </div>
+            <div id="content-3" class="section-content border-t border-outline-variant/20">
+              <div class="px-5 py-4 space-y-3">
+                <div class="pl-11">
+                  <div class="subsection-header cursor-pointer flex items-center gap-2 py-2" onclick="toggleSubsection('sec-3-1')">
+                    <span class="text-xs font-semibold text-primary">第一节</span>
+                    <span class="text-sm">提示词工程基础</span>
+                    <i data-lucide="chevron-right" class="w-4 h-4 text-on-surface-variant ml-auto transition-transform" id="subicon-3-1"></i>
+                  </div>
+                  <div id="sec-3-1" class="subsection-content hidden pl-2 pt-2 space-y-2">
+                    <div class="text-sm text-on-surface-variant">一、Prompt的作用与重要性</div>
+                    <div class="text-sm text-on-surface-variant">二、知识泛滥与提问稀缺</div>
+                  </div>
+                </div>
+                <div class="pl-11">
+                  <div class="subsection-header cursor-pointer flex items-center gap-2 py-2" onclick="toggleSubsection('sec-3-2')">
+                    <span class="text-xs font-semibold text-accent-gold">第二节</span>
+                    <span class="text-sm">CRISPE模型</span>
+                    <i data-lucide="chevron-right" class="w-4 h-4 text-on-surface-variant ml-auto transition-transform" id="subicon-3-2"></i>
+                  </div>
+                  <div id="sec-3-2" class="subsection-content hidden pl-2 pt-2 space-y-2">
+                    <div class="image-container cursor-pointer p-2 rounded-lg bg-surface-container/50 hover:bg-surface-container transition-colors" onclick="openImageModal('Course Outline/assets/images/CRISPE模型.png', 'CRISPE模型')">
+                      <img src="Course Outline/assets/images/CRISPE模型.png" alt="CRISPE模型" class="w-full rounded-lg max-h-64 object-contain">
+                    </div>
+                    <div class="text-sm text-on-surface-variant">一、Capacity and Role（角色与能力）</div>
+                    <div class="text-sm text-on-surface-variant">二、Insight（背景洞察/上下文）</div>
+                    <div class="text-sm text-on-surface-variant">三、Statement（任务陈述）</div>
+                    <div class="text-sm text-on-surface-variant">四、Personality（个性、风格）</div>
+                    <div class="text-sm text-on-surface-variant">五、Experiment（实验示例）</div>
+                  </div>
+                </div>
+                <div class="pl-11">
+                  <div class="subsection-header cursor-pointer flex items-center gap-2 py-2" onclick="toggleSubsection('sec-3-3')">
+                    <span class="text-xs font-semibold text-accent-cyan">第三节</span>
+                    <span class="text-sm">提示词实战演练</span>
+                    <i data-lucide="chevron-right" class="w-4 h-4 text-on-surface-variant ml-auto transition-transform" id="subicon-3-3"></i>
+                  </div>
+                  <div id="sec-3-3" class="subsection-content hidden pl-2 pt-2 space-y-2">
+                    <div class="text-sm text-on-surface-variant">一、智囊团角色扮演</div>
+                    <div class="text-sm text-on-surface-variant">二、多风格文案生成</div>
+                  </div>
+                </div>
+                <div class="pl-11">
+                  <div class="subsection-header cursor-pointer flex items-center gap-2 py-2" onclick="toggleSubsection('sec-3-4')">
+                    <span class="text-xs font-semibold text-primary">第四节</span>
+                    <span class="text-sm">大模型工具选择</span>
+                    <i data-lucide="chevron-right" class="w-4 h-4 text-on-surface-variant ml-auto transition-transform" id="subicon-3-4"></i>
+                  </div>
+                  <div id="sec-3-4" class="subsection-content hidden pl-2 pt-2 space-y-2">
+                    <div class="text-sm text-on-surface-variant">一、一梯队：Anthropic、Google、OpenAI</div>
+                    <div class="text-sm text-on-surface-variant">二、二梯队：国内主流大模型</div>
+                    <div class="text-sm text-on-surface-variant">三、模型选择策略</div>
+                  </div>
+                </div>
+                <div class="pl-11">
+                  <div class="subsection-header cursor-pointer flex items-center gap-2 py-2" onclick="toggleSubsection('sec-3-5')">
+                    <span class="text-xs font-semibold text-accent-gold">第五节</span>
+                    <span class="text-sm">文案与图片视频生成工具</span>
+                    <i data-lucide="chevron-right" class="w-4 h-4 text-on-surface-variant ml-auto transition-transform" id="subicon-3-5"></i>
+                  </div>
+                  <div id="sec-3-5" class="subsection-content hidden pl-2 pt-2 space-y-2">
+                    <div class="text-sm text-on-surface-variant">一、文案生成工具与平台</div>
+                    <div class="text-sm text-on-surface-variant">二、图片/视频生成工具</div>
+                    <div class="text-sm text-on-surface-variant">三、页面设计演示</div>
+                  </div>
+                </div>
+                <div class="pl-11">
+                  <div class="subsection-header cursor-pointer flex items-center gap-2 py-2" onclick="toggleSubsection('sec-3-6')">
+                    <span class="text-xs font-semibold text-accent-cyan">第六节</span>
+                    <span class="text-sm">数字人视频工具</span>
+                    <i data-lucide="chevron-right" class="w-4 h-4 text-on-surface-variant ml-auto transition-transform" id="subicon-3-6"></i>
+                  </div>
+                  <div id="sec-3-6" class="subsection-content hidden pl-2 pt-2 space-y-2">
+                    <div class="text-sm text-on-surface-variant">一、源头厂家对比与成本分析</div>
+                    <div class="text-sm text-on-surface-variant">二、API接口调用</div>
+                    <div class="text-sm text-on-surface-variant">三、3D数字人生成练习</div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div id="chapter-4" class="chapter-card glass-card rounded-xl overflow-hidden reveal" style="animation-delay: 0.4s;">
+            <div class="chapter-header cursor-pointer px-5 py-4 flex items-center gap-3" onclick="toggleSection('chapter-4')">
+              <div class="w-8 h-8 rounded-lg bg-primary/10 flex items-center justify-center flex-shrink-0">
+                <span class="text-primary font-bold text-sm">04</span>
+              </div>
+              <div class="flex-1 text-left">
+                <h2 class="font-bold text-base">第四章 AI Agent智能体开发实战</h2>
+              </div>
+              <i data-lucide="chevron-down" class="w-5 h-5 text-on-surface-variant transition-transform flex-shrink-0" id="icon-4"></i>
+            </div>
+            <div id="content-4" class="section-content border-t border-outline-variant/20">
+              <div class="px-5 py-4 space-y-3">
+                <div class="pl-11">
+                  <div class="subsection-header cursor-pointer flex items-center gap-2 py-2" onclick="toggleSubsection('sec-4-1')">
+                    <span class="text-xs font-semibold text-primary">第一节</span>
+                    <span class="text-sm">智能体概述与平台分析</span>
+                    <i data-lucide="chevron-right" class="w-4 h-4 text-on-surface-variant ml-auto transition-transform" id="subicon-4-1"></i>
+                  </div>
+                  <div id="sec-4-1" class="subsection-content hidden pl-2 pt-2 space-y-2">
+                    <div class="text-sm text-on-surface-variant">一、智能体的定义与能力范围</div>
+                    <div class="image-container cursor-pointer p-2 rounded-lg bg-surface-container/50 hover:bg-surface-container transition-colors" onclick="openImageModal('Course Outline/assets/images/Agent数字员工定义.png', 'Agent数字员工定义')">
+                      <img src="Course Outline/assets/images/Agent数字员工定义.png" alt="Agent数字员工定义" class="w-full rounded-lg max-h-64 object-contain">
+                    </div>
+                    <div class="text-sm text-on-surface-variant">二、OpenClaw（龙虾）：高效执行者</div>
+                    <div class="text-sm text-on-surface-variant">三、Hermes（爱马仕）：智慧学习者</div>
+                    <div class="image-container cursor-pointer p-2 rounded-lg bg-surface-container/50 hover:bg-surface-container transition-colors" onclick="openImageModal('Course Outline/assets/images/Hermes对比OpenClaw.png', 'Hermes对比OpenClaw')">
+                      <img src="Course Outline/assets/images/Hermes对比OpenClaw.png" alt="Hermes对比OpenClaw" class="w-full rounded-lg max-h-64 object-contain">
+                    </div>
+                    <div class="text-sm text-on-surface-variant">四、Manus：通用型AI智能体</div>
+                    <div class="text-sm text-on-surface-variant">五、OpenClaw的困境与风险</div>
+                  </div>
+                </div>
+                <div class="pl-11">
+                  <div class="subsection-header cursor-pointer flex items-center gap-2 py-2" onclick="toggleSubsection('sec-4-2')">
+                    <span class="text-xs font-semibold text-accent-gold">第二节</span>
+                    <span class="text-sm">AI员工的本质与7大部件</span>
+                    <i data-lucide="chevron-right" class="w-4 h-4 text-on-surface-variant ml-auto transition-transform" id="subicon-4-2"></i>
+                  </div>
+                  <div id="sec-4-2" class="subsection-content hidden pl-2 pt-2 space-y-2">
+                    <div class="text-sm text-on-surface-variant">一、"复刻+增强"的本质</div>
+                    <div class="text-sm text-on-surface-variant">二、选择大脑（大模型）</div>
+                    <div class="text-sm text-on-surface-variant">三、人物设定与详细技能</div>
+                    <div class="text-sm text-on-surface-variant">四、工具使用与知识库</div>
+                    <div class="text-sm text-on-surface-variant">五、Skill的概念与应用</div>
+                  </div>
+                </div>
+                <div class="pl-11">
+                  <div class="subsection-header cursor-pointer flex items-center gap-2 py-2" onclick="toggleSubsection('sec-4-3')">
+                    <span class="text-xs font-semibold text-accent-cyan">第三节</span>
+                    <span class="text-sm">智能体开发五步法</span>
+                    <i data-lucide="chevron-right" class="w-4 h-4 text-on-surface-variant ml-auto transition-transform" id="subicon-4-3"></i>
+                  </div>
+                  <div id="sec-4-3" class="subsection-content hidden pl-2 pt-2 space-y-2">
+                    <div class="image-container cursor-pointer p-2 rounded-lg bg-surface-container/50 hover:bg-surface-container transition-colors" onclick="openImageModal('Course Outline/assets/images/智能体开发五步法.png', '智能体开发五步法')">
+                      <img src="Course Outline/assets/images/智能体开发五步法.png" alt="智能体开发五步法" class="w-full rounded-lg max-h-64 object-contain">
+                    </div>
+                    <div class="text-sm text-on-surface-variant">一、第一步：场景梳理</div>
+                    <div class="image-container cursor-pointer p-2 rounded-lg bg-surface-container/50 hover:bg-surface-container transition-colors" onclick="openImageModal('Course Outline/assets/images/场景梳理公式.png', '场景梳理公式')">
+                      <img src="Course Outline/assets/images/场景梳理公式.png" alt="场景梳理公式" class="w-full rounded-lg max-h-64 object-contain">
+                    </div>
+                    <div class="text-sm text-on-surface-variant">二、第二步：流程梳理</div>
+                    <div class="text-sm text-on-surface-variant">三、第三步：人机分工</div>
+                    <div class="text-sm text-on-surface-variant">四、第四步：需求撰写</div>
+                    <div class="text-sm text-on-surface-variant">五、第五步：开发与部署</div>
+                  </div>
+                </div>
+                <div class="pl-11">
+                  <div class="subsection-header cursor-pointer flex items-center gap-2 py-2" onclick="toggleSubsection('sec-4-4')">
+                    <span class="text-xs font-semibold text-primary">第四节</span>
+                    <span class="text-sm">人机协作核心原则</span>
+                    <i data-lucide="chevron-right" class="w-4 h-4 text-on-surface-variant ml-auto transition-transform" id="subicon-4-4"></i>
+                  </div>
+                  <div id="sec-4-4" class="subsection-content hidden pl-2 pt-2 space-y-2">
+                    <div class="image-container cursor-pointer p-2 rounded-lg bg-surface-container/50 hover:bg-surface-container transition-colors" onclick="openImageModal('Course Outline/assets/images/人机分工四要素.png', '人机分工四要素')">
+                      <img src="Course Outline/assets/images/人机分工四要素.png" alt="人机分工四要素" class="w-full rounded-lg max-h-64 object-contain">
+                    </div>
+                    <div class="text-sm text-on-surface-variant">一、人机分工不是"替换员工"</div>
+                    <div class="text-sm text-on-surface-variant">二、AI动手、人拍板</div>
+                    <div class="text-sm text-on-surface-variant">三、正确认知：好SOP+AI工具=效率倍增</div>
+                    <div class="text-sm text-on-surface-variant">四、AI适合与不适合的任务判断</div>
+                  </div>
+                </div>
+                <div class="pl-11">
+                  <div class="subsection-header cursor-pointer flex items-center gap-2 py-2" onclick="toggleSubsection('sec-4-5')">
+                    <span class="text-xs font-semibold text-accent-gold">第五节</span>
+                    <span class="text-sm">流程梳理方法</span>
+                    <i data-lucide="chevron-right" class="w-4 h-4 text-on-surface-variant ml-auto transition-transform" id="subicon-4-5"></i>
+                  </div>
+                  <div id="sec-4-5" class="subsection-content hidden pl-2 pt-2 space-y-2">
+                    <div class="text-sm text-on-surface-variant">一、竞品/爆品拆解法</div>
+                    <div class="text-sm text-on-surface-variant">二、SKILL搜索法与行业SOP文档法</div>
+                    <div class="text-sm text-on-surface-variant">三、跟踪观察法与高手访谈法</div>
+                    <div class="text-sm text-on-surface-variant">四、AI复制同事法</div>
+                  </div>
+                </div>
+                <div class="pl-11">
+                  <div class="subsection-header cursor-pointer flex items-center gap-2 py-2" onclick="toggleSubsection('sec-4-6')">
+                    <span class="text-xs font-semibold text-accent-cyan">第六节</span>
+                    <span class="text-sm">AI营销SOP模板</span>
+                    <i data-lucide="chevron-right" class="w-4 h-4 text-on-surface-variant ml-auto transition-transform" id="subicon-4-6"></i>
+                  </div>
+                  <div id="sec-4-6" class="subsection-content hidden pl-2 pt-2 space-y-2">
+                    <div class="text-sm text-on-surface-variant">一、SOP模板1：生成标题</div>
+                    <div class="text-sm text-on-surface-variant">二、SOP模板2：生成图片</div>
+                    <div class="text-sm text-on-surface-variant">三、SOP模板3：生成文案（小红书）</div>
+                    <div class="text-sm text-on-surface-variant">四、SOP模板4：生成口播短视频</div>
+                  </div>
+                </div>
+                <div class="pl-11">
+                  <div class="subsection-header cursor-pointer flex items-center gap-2 py-2" onclick="toggleSubsection('sec-4-7')">
+                    <span class="text-xs font-semibold text-primary">第七节</span>
+                    <span class="text-sm">企业Agent搭建路径</span>
+                    <i data-lucide="chevron-right" class="w-4 h-4 text-on-surface-variant ml-auto transition-transform" id="subicon-4-7"></i>
+                  </div>
+                  <div id="sec-4-7" class="subsection-content hidden pl-2 pt-2 space-y-2">
+                    <div class="text-sm text-on-surface-variant">一、路径1：大厂平台搭建（Coze、千帆、百炼）</div>
+                    <div class="text-sm text-on-surface-variant">二、路径2：开源自托管（Dify、FastGPT）</div>
+                    <div class="text-sm text-on-surface-variant">三、路径3：厂商私有化交付</div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div id="chapter-5" class="chapter-card glass-card rounded-xl overflow-hidden reveal" style="animation-delay: 0.5s;">
+            <div class="chapter-header cursor-pointer px-5 py-4 flex items-center gap-3" onclick="toggleSection('chapter-5')">
+              <div class="w-8 h-8 rounded-lg bg-accent-gold/10 flex items-center justify-center flex-shrink-0">
+                <span class="text-accent-gold font-bold text-sm">05</span>
+              </div>
+              <div class="flex-1 text-left">
+                <h2 class="font-bold text-base">第五章 AI化组织变革与实施</h2>
+              </div>
+              <i data-lucide="chevron-down" class="w-5 h-5 text-on-surface-variant transition-transform flex-shrink-0" id="icon-5"></i>
+            </div>
+            <div id="content-5" class="section-content border-t border-outline-variant/20">
+              <div class="px-5 py-4 space-y-3">
+                <div class="pl-11">
+                  <div class="subsection-header cursor-pointer flex items-center gap-2 py-2" onclick="toggleSubsection('sec-5-1')">
+                    <span class="text-xs font-semibold text-primary">第一节</span>
+                    <span class="text-sm">AI化转型的主要矛盾</span>
+                    <i data-lucide="chevron-right" class="w-4 h-4 text-on-surface-variant ml-auto transition-transform" id="subicon-5-1"></i>
+                  </div>
+                  <div id="sec-5-1" class="subsection-content hidden pl-2 pt-2 space-y-2">
+                    <div class="text-sm text-on-surface-variant">一、关注技术实施vs关注组织变革</div>
+                    <div class="text-sm text-on-surface-variant">二、员工抵制、领导支持不足、业务不贴合</div>
+                    <div class="text-sm text-on-surface-variant">三、数智化是变革而非改进</div>
+                    <div class="text-sm text-on-surface-variant">四、生产关系的转型是根本</div>
+                  </div>
+                </div>
+                <div class="pl-11">
+                  <div class="subsection-header cursor-pointer flex items-center gap-2 py-2" onclick="toggleSubsection('sec-5-2')">
+                    <span class="text-xs font-semibold text-accent-gold">第二节</span>
+                    <span class="text-sm">AI化转型的内在矛盾与误区</span>
+                    <i data-lucide="chevron-right" class="w-4 h-4 text-on-surface-variant ml-auto transition-transform" id="subicon-5-2"></i>
+                  </div>
+                  <div id="sec-5-2" class="subsection-content hidden pl-2 pt-2 space-y-2">
+                    <div class="text-sm text-on-surface-variant">一、活得好好的与"迫切"转型的矛盾</div>
+                    <div class="text-sm text-on-surface-variant">二、人效提升与人员优化矛盾</div>
+                    <div class="text-sm text-on-surface-variant">三、风险保障与敏捷市场的矛盾</div>
+                    <div class="text-sm text-on-surface-variant">四、常见转型误区</div>
+                  </div>
+                </div>
+                <div class="pl-11">
+                  <div class="subsection-header cursor-pointer flex items-center gap-2 py-2" onclick="toggleSubsection('sec-5-3')">
+                    <span class="text-xs font-semibold text-accent-cyan">第三节</span>
+                    <span class="text-sm">企业管理的核心：三个一致性</span>
+                    <i data-lucide="chevron-right" class="w-4 h-4 text-on-surface-variant ml-auto transition-transform" id="subicon-5-3"></i>
+                  </div>
+                  <div id="sec-5-3" class="subsection-content hidden pl-2 pt-2 space-y-2">
+                    <div class="text-sm text-on-surface-variant">一、企业内外环境一致性</div>
+                    <div class="text-sm text-on-surface-variant">二、战略到执行一致性</div>
+                    <div class="text-sm text-on-surface-variant">三、业务到IT的一致性</div>
+                  </div>
+                </div>
+                <div class="pl-11">
+                  <div class="subsection-header cursor-pointer flex items-center gap-2 py-2" onclick="toggleSubsection('sec-5-4')">
+                    <span class="text-xs font-semibold text-primary">第四节</span>
+                    <span class="text-sm">AI化转型实施路径</span>
+                    <i data-lucide="chevron-right" class="w-4 h-4 text-on-surface-variant ml-auto transition-transform" id="subicon-5-4"></i>
+                  </div>
+                  <div id="sec-5-4" class="subsection-content hidden pl-2 pt-2 space-y-2">
+                    <div class="image-container cursor-pointer p-2 rounded-lg bg-surface-container/50 hover:bg-surface-container transition-colors" onclick="openImageModal('Course Outline/assets/images/AI化转型框架.png', 'AI化转型框架')">
+                      <img src="Course Outline/assets/images/AI化转型框架.png" alt="AI化转型框架" class="w-full rounded-lg max-h-64 object-contain">
+                    </div>
+                    <div class="text-sm text-on-surface-variant">一、全面扫描：内外环境分析</div>
+                    <div class="text-sm text-on-surface-variant">二、统一愿景：业务发展机会研讨</div>
+                    <div class="text-sm text-on-surface-variant">三、转型规划：路径/举措/项目识别</div>
+                    <div class="text-sm text-on-surface-variant">四、落地设计：速赢场景落地</div>
+                    <div class="text-sm text-on-surface-variant">五、跟踪迭代：持续复盘优化</div>
+                  </div>
+                </div>
+                <div class="pl-11">
+                  <div class="subsection-header cursor-pointer flex items-center gap-2 py-2" onclick="toggleSubsection('sec-5-5')">
+                    <span class="text-xs font-semibold text-accent-gold">第五节</span>
+                    <span class="text-sm">组织变革方法：变革三步模型</span>
+                    <i data-lucide="chevron-right" class="w-4 h-4 text-on-surface-variant ml-auto transition-transform" id="subicon-5-5"></i>
+                  </div>
+                  <div id="sec-5-5" class="subsection-content hidden pl-2 pt-2 space-y-2">
+                    <div class="text-sm text-on-surface-variant">一、解冻（Unfreezing）</div>
+                    <div class="text-sm text-on-surface-variant">二、变革（Changing）</div>
+                    <div class="text-sm text-on-surface-variant">三、再冻结（Refreezing）</div>
+                  </div>
+                </div>
+                <div class="pl-11">
+                  <div class="subsection-header cursor-pointer flex items-center gap-2 py-2" onclick="toggleSubsection('sec-5-6')">
+                    <span class="text-xs font-semibold text-accent-cyan">第六节</span>
+                    <span class="text-sm">解冻的三大方式</span>
+                    <i data-lucide="chevron-right" class="w-4 h-4 text-on-surface-variant ml-auto transition-transform" id="subicon-5-6"></i>
+                  </div>
+                  <div id="sec-5-6" class="subsection-content hidden pl-2 pt-2 space-y-2">
+                    <div class="text-sm text-on-surface-variant">一、营造紧迫感</div>
+                    <div class="text-sm text-on-surface-variant">二、组建领导团队（一把手工程）</div>
+                    <div class="text-sm text-on-surface-variant">三、疏通阻力（8问模型与5大策略）</div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div id="chapter-6" class="chapter-card glass-card rounded-xl overflow-hidden reveal" style="animation-delay: 0.6s;">
+            <div class="chapter-header cursor-pointer px-5 py-4 flex items-center gap-3" onclick="toggleSection('chapter-6')">
+              <div class="w-8 h-8 rounded-lg bg-accent-cyan/10 flex items-center justify-center flex-shrink-0">
+                <span class="text-accent-cyan font-bold text-sm">06</span>
+              </div>
+              <div class="flex-1 text-left">
+                <h2 class="font-bold text-base">第六章 课程总结与实践建议</h2>
+              </div>
+              <i data-lucide="chevron-down" class="w-5 h-5 text-on-surface-variant transition-transform flex-shrink-0" id="icon-6"></i>
+            </div>
+            <div id="content-6" class="section-content border-t border-outline-variant/20">
+              <div class="px-5 py-4 space-y-3">
+                <div class="pl-11">
+                  <div class="subsection-header cursor-pointer flex items-center gap-2 py-2" onclick="toggleSubsection('sec-6-1')">
+                    <span class="text-xs font-semibold text-primary">第一节</span>
+                    <span class="text-sm">核心要点回顾</span>
+                    <i data-lucide="chevron-right" class="w-4 h-4 text-on-surface-variant ml-auto transition-transform" id="subicon-6-1"></i>
+                  </div>
+                  <div id="sec-6-1" class="subsection-content hidden pl-2 pt-2 space-y-2">
+                    <div class="text-sm text-on-surface-variant">一、AI营销的本质与价值</div>
+                    <div class="text-sm text-on-surface-variant">二、营销范式演进规律</div>
+                    <div class="text-sm text-on-surface-variant">三、智能体开发方法论</div>
+                    <div class="text-sm text-on-surface-variant">四、组织变革关键要素</div>
+                  </div>
+                </div>
+                <div class="pl-11">
+                  <div class="subsection-header cursor-pointer flex items-center gap-2 py-2" onclick="toggleSubsection('sec-6-2')">
+                    <span class="text-xs font-semibold text-accent-gold">第二节</span>
+                    <span class="text-sm">未来趋势展望</span>
+                    <i data-lucide="chevron-right" class="w-4 h-4 text-on-surface-variant ml-auto transition-transform" id="subicon-6-2"></i>
+                  </div>
+                  <div id="sec-6-2" class="subsection-content hidden pl-2 pt-2 space-y-2">
+                    <div class="text-sm text-on-surface-variant">一、AI营销系统的自动化程度提升</div>
+                    <div class="text-sm text-on-surface-variant">二、多智能体协同成为主流</div>
+                    <div class="text-sm text-on-surface-variant">三、人机协作模式持续演进</div>
+                  </div>
+                </div>
+                <div class="pl-11">
+                  <div class="subsection-header cursor-pointer flex items-center gap-2 py-2" onclick="toggleSubsection('sec-6-3')">
+                    <span class="text-xs font-semibold text-accent-cyan">第三节</span>
+                    <span class="text-sm">实践建议</span>
+                    <i data-lucide="chevron-right" class="w-4 h-4 text-on-surface-variant ml-auto transition-transform" id="subicon-6-3"></i>
+                  </div>
+                  <div id="sec-6-3" class="subsection-content hidden pl-2 pt-2 space-y-2">
+                    <div class="text-sm text-on-surface-variant">一、从速赢场景切入</div>
+                    <div class="text-sm text-on-surface-variant">二、重视SOP梳理与固化</div>
+                    <div class="text-sm text-on-surface-variant">三、关注组织变革与人才培养</div>
+                    <div class="text-sm text-on-surface-variant">四、持续迭代优化</div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <div class="section-divider max-w-3xl mx-auto"></div>
+
+    <footer class="py-8 border-t border-outline-variant/20">
+      <div class="max-w-4xl mx-auto px-4 md:px-6 flex flex-col md:flex-row items-center justify-between gap-4">
+        <div class="flex items-center gap-2">
+          <div class="w-6 h-6 rounded-md bg-gradient-to-br from-primary to-accent-cyan flex items-center justify-center">
+            <i data-lucide="zap" class="w-3 h-3 text-white"></i>
+          </div>
+          <span class="text-sm font-semibold">喻旭 · 青峰侠</span>
+        </div>
+        <p class="text-xs text-on-surface-variant">AI营销课程大纲 · 数智化商业顾问</p>
+      </div>
+    </footer>
+  </main>
+
+  <div id="imageModal" class="image-modal" onclick="closeImageModal()">
+    <button onclick="closeImageModal()" class="absolute top-4 right-4 w-10 h-10 rounded-full bg-white/10 text-white flex items-center justify-center hover:bg-white/20 transition-colors">
+      <i data-lucide="x" class="w-6 h-6"></i>
+    </button>
+    <img id="modalImage" src="" alt="" class="max-w-[90vw] max-h-[85vh] object-contain rounded-lg">
+    <p id="modalTitle" class="text-center text-white/80 mt-4 text-sm"></p>
+  </div>
+
+  <script>
+    lucide.createIcons();
+    
+    function toggleSection(chapterId) {
+      const contentId = 'content-' + chapterId.split('-')[1];
+      const content = document.getElementById(contentId);
+      const icon = document.getElementById('icon-' + chapterId.split('-')[1]);
+      content.classList.toggle('expanded');
+      icon.style.transform = content.classList.contains('expanded') ? 'rotate(180deg)' : 'rotate(0deg)';
+    }
+    
+    function toggleSubsection(id) {
+      const section = document.getElementById(id);
+      const icon = document.getElementById('subicon-' + id);
+      section.classList.toggle('hidden');
+      icon.style.transform = section.classList.contains('hidden') ? 'rotate(0deg)' : 'rotate(90deg)';
+    }
+    
+    function openImageModal(src, title) {
+      const modal = document.getElementById('imageModal');
+      const img = document.getElementById('modalImage');
+      const titleEl = document.getElementById('modalTitle');
+      img.src = src;
+      titleEl.textContent = title;
+      modal.classList.add('active');
+      document.body.style.overflow = 'hidden';
+    }
+    
+    function closeImageModal() {
+      const modal = document.getElementById('imageModal');
+      modal.classList.remove('active');
+      document.body.style.overflow = '';
+    }
+
+    function toggleMobileToc() {
+      const sidebar = document.querySelector('.toc-sidebar');
+      const overlay = document.getElementById('overlay');
+      sidebar.classList.toggle('mobile-active');
+      overlay.classList.toggle('active');
+    }
+
+    const chapters = document.querySelectorAll('[id^="chapter-"]');
+    const navItems = document.querySelectorAll('.nav-item');
+    
+    window.addEventListener('scroll', function() {
+      const scrollPosition = window.scrollY + 150;
+      
+      chapters.forEach(function(chapter, index) {
+        const chapterTop = chapter.offsetTop;
+        const chapterHeight = chapter.offsetHeight;
+        
+        if (scrollPosition >= chapterTop && scrollPosition < chapterTop + chapterHeight) {
+          navItems.forEach(function(item) {
+            item.classList.remove('active');
+          });
+          navItems[index].classList.add('active');
+        }
+      });
+    });
+
+    const observer = new IntersectionObserver(function(entries) {
+      entries.forEach(function(entry) {
+        if (entry.isIntersecting) {
+          entry.target.classList.add('visible');
+        }
+      });
+    }, { threshold: 0.1 });
+    
+    document.querySelectorAll('.reveal').forEach(function(el) {
+      observer.observe(el);
+    });
+  </script>
+</body>
+</html>
